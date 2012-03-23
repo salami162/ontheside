@@ -1,0 +1,53 @@
+﻿span.filterBuilder { display:inline-block; min-width:400px; }
+span.filterBuilder ul { list-style-type:none; padding-left:0; }
+
+span.filterBuilder ul.filter_group { margin-right:3px; padding-bottom:5px; border:1px solid #b7b7b7; border-radius: 8px; }
+
+span.filterBuilder ul.filter_group { margin-right:3px; margin-bottom:10px; padding-bottom:5px; border:1px solid #b7b7b7; border-radius: 8px; }
+span.filterBuilder ul.filter_group li { padding:5px; padding-top:3px; padding-bottom:3px; padding-left:25px; border:1px solid transparent; margin-right:3px; }
+span.filterBuilder ul.filter_group li.highlight { background-color:#e0f0ff; border:1px solid #74a6cc; border-radius:4px; }
+span.filterBuilder ul.filter_group li.filter { padding:5; padding-left:3px; padding-right:3px; }
+
+span.filterBuilder ul.filter_group li.filter .description { float:left; margin-left:3px; margin-right:10px; }
+span.filterBuilder ul.filter_group li.filter .description .element { float:left; }
+span.filterBuilder ul.filter_group li.filter .description .input { padding-top:3px; }
+
+span.filterBuilder ul.filter_group li.filter .description .entity_type_and_attribute { min-width:110px; border-radius:6px; margin-right:8px; border:1px solid #aaa; background-color:white; cursor:pointer; }
+span.filterBuilder ul.filter_group li.filter .description .entity_type_and_attribute .text { padding:4px; padding-left:5px; float:left;  }
+span.filterBuilder ul.filter_group li.filter .description .entity_type_and_attribute .arrow { padding:4px; padding-right:5px; padding-top:10px; float:right; height:2em; border-left:1px solid #ccc; border-top-right-radius:6px; border-bottom-right-radius:6px; border-top:0; border-bottom:0; border-right:0; }
+
+span.filterBuilder ul.filter_group li.filter .description .entity_type_and_attribute_highlight { border:1px solid #2489ec; }
+span.filterBuilder ul.filter_group li.filter .description .entity_type_and_attribute .arrow_highlight { border-left:1px solid #2489ec; }
+
+span.filterBuilder ul.filter_group li.filter .parameters input { font-size:11px; width: 250px; padding:2px; }
+span.filterBuilder ul.filter_group li.filter .parameters label.error { font-size:11px; width: 250px; padding:2px; color:red; display:inline-block; overflow:auto; }
+
+span.filterBuilder ul.filter_group li.operator { font-weight: bold; padding-left:8px; font-weight:bold; border-bottom:1px solid #ddd; padding-right:11px; }
+
+span.filterBuilder li.add_group_items table { width: 100% }
+span.filterBuilder li.add_group_items table td { width:50% }
+
+span.filterBuilder li.add_group_items div.new_group_item_clickable { margin-right:3px; padding-top:3px; padding-bottom:3px; padding-left: 5px; border:1px solid #ddd; border-radius: 8px; color:#bbb; cursor:pointer; }
+span.filterBuilder li.add_group_items div.new_filter_clickable { margin-left:20px; }
+span.filterBuilder li.add_group_items div.new_group_item_clickable .ui-icon { float:left; margin-bottom:2px; }
+span.filterBuilder li.add_group_items div.new_group_item_clickable .text { float:left; margin-left:5px; margin-top:2px; }
+span.filterBuilder li.add_group_items div.new_group_item_clickable_highlight { border:1px solid #ccc; color:#a7a7a7; background-color:#f0f0f0; }
+
+span.filterBuilder input { border: 1px solid gray; border-radius:4px; }
+
+span.filterBuilder .ui-button .ui-button-text { line-height: 1.0; padding-left:0.5em; padding-right:0.5em; }
+span.filterBuilder button.edit { float:right; }
+
+span.filterBuilder .row_control_buttons { width:60px; margin-top:4px; float: right; }
+
+span.filterBuilder a.trash_button { float:left; margin:4px 2px; }
+span.filterBuilder a.add_filter_button { float:left; margin:4px 2px; }
+
+span.filterBuilder .initial_filter_placeholder { margin-top:5px; margin-right:20px; margin-bottom:10px; border:1px solid #b7b7b7; border-radius: 8px; padding:5px 20px; 5px; 20px; }
+span.filterBuilder .initial_filter_placeholder .no_filters_text { float:left; font-size:1.2em; margin-top:5px; }
+span.filterBuilder .initial_filter_placeholder button.create_filter { float:right; }
+
+span.filterBuilder .target_selection_panel { position:absolute; background-color:white; padding:6px; border:1px solid #2489ec; border-radius:6px; box-shadow: 1px 5px 10px #888; }
+span.filterBuilder .target_selection_panel .buttons { margin-top:6px; }
+span.filterBuilder .target_selection_panel .buttons button.ok { float:right; }
+span.filterBuilder .target_selection_panel .buttons button.cancel { float:right; clear:right; }

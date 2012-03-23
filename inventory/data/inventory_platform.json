@@ -1,0 +1,9 @@
+{
+    "entity_name": "Drachma",
+    "id": "d442f749-261c-4d32-8542-f932cc12224b",
+    "num_of_sockets": 4,
+    "num_of_pcies": 5,
+    "num_of_satas": 4,
+    "num_of_dcts": 2,
+    "num_of_dimms": 6 
+}

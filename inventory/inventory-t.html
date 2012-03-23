@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Inventory Mockup - t</title>
+    <link rel="stylesheet" href="../CSS/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../CSS/redmond/jquery-ui-1.8.16.custom.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../CSS/redmond/jquery.ui.theme.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../CSS/jquery.treeview.css" type="text/css"/>
+    <link rel="stylesheet" href="../CSS/filter_builder.css" type="text/css"/>
+    <link rel="stylesheet" href="../qtip/jquery.qtip.css" type="text/css"/>
+    <link rel="stylesheet" href="inventory.css" type="text/css"/>
+    
+    <script src="../Scripts/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+    <script src="../Scripts/underscore.js" type="text/javascript"></script>
+    <script src="../Scripts/backbone.js" type="text/javascript"></script>
+    <script src="../Scripts/skynet_base.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery.treeview.js" type="text/javascript"></script>
+    <script src="../Scripts/filter_builder.js" type="text/javascript"></script>
+    <script src="../Scripts/tiny_button.js" type="text/javascript"></script>
+    <script src="../qtip/jquery.qtip.js" type="text/javascript"></script>
+    <script src="inventory.js" type="text/javascript"></script>
+    <script src="models.js" type="text/javascript"></script>
+    <script src="doT.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="dynamic"></div>
+</body>
+</html>
+
+<!-- Partial Templates -->
+<script type="text/x-dot-template" id="platform-template">
+    <h1>Platform: <span style="font-style:italic; font-weight: bold;">{{= it.entity_name}}</span></h1>
+    <ul class="filetree treeview-famfamfam">
+        <li><span class="level-one"> Sockets </span>
+            {{#def.socket}}
+        </li>
+        <li class="closed"><span class="level-one"> PCIe Slots </span>
+            {{#def.pcie}}
+        </li>
+        <li class="closed"><span class="level-one"> SATA Ports </span>
+            {{#def.sata}}
+        </li>
+    </ul>
+</script>
+
+<script type="text/x-dot-template" id="pcie-template">
+    <ul>
+        {{ for (var i=0; i < it.num_of_pcies; i++) { }}
+        <li>PCIe Slot {{= i}}</li>
+        {{ } }}
+    </ul>
+</script>
+
+<script type="text/x-dot-template" id="sata-template">
+    <ul>
+        {{ for (var i=0; i < it.num_of_satas; i++) { }}
+        <li>SATA Port {{= i}}</li>
+        {{ } }}
+    </ul>
+</script>
+
+<script type="text/x-dot-template" id="socket-template">
+    <ul>
+        {{ for (var i=0; i < it.num_of_sockets; i++) { }}
+        <li {{ if (i > 0) { }} class="closed" {{ } }}><span class="allowFilters"> Socket {{= i}} <span class="barcode" >&nbsp;&nbsp;</span> <input type="text" name="barcode" class="barcode" title="Please Enter Barcode Here."/><span class="constrain"><span class="filter-value filter">&nbsp;</span></span></span>
+            {{#def.dimm}}
+        </li>
+        {{ } }}
+    </ul>
+</script>
+
+<script type="text/x-dot-template" id="dimm-template">
+    <ul>
+        {{ for (var k=0; k < it.num_of_dcts; k++) { }}
+        <li><span style="font-weight: bold;"> DCT {{= k}} </span>
+            <ul>
+                {{ for (var j=0; j < it.num_of_dimms/2; j++) { }}
+                <li><span class="allowFilters">DIMM Slot {{= k*(it.num_of_dimms/2) + j}}<span class="barcode required" title="Barcode is Required.">*</span><input type="text" name="barcode" class="barcode" title="Please Enter Barcode Here."/><span class="constrain"><span class="filter-value filter">&nbsp;</span></span></span> 
+                </li>
+                {{ } }}
+            </ul>
+        </li>
+        {{ } }}
+    </ul>
+</script>
