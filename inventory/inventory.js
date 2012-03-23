@@ -1,3 +1,4 @@
+// define FILTERABLES for filter plugin 
 var cpuFilterables = [
         {   name: 'CPU_Model',
             display_name: 'CPU Model', 
@@ -79,54 +80,6 @@ var dimmFilterables = [
         }
 
 ];
-
-
-var sampleFilter1 = {
-    "@xsi:type": "OntologyFilterCombination",
-    "Operator": "AND",
-    "Filters": {
-        "BaseFilters": null,
-        "FilterCombination": [
-          {
-              "@xsi:type": "OntologyFilterCombination",
-              "Operator": "OR",
-              "Filters": {
-                  "BaseFilters": [
-                {
-                    "@xsi:type": "OntologyFilter",
-                    "Attribute": {
-                        "AttributeId": "00000000-0000-0000-0000-000000000002",
-                        "AttributeName": "DateCreated",
-                        "EntityTypeId": "7e865164-4ff3-4e10-ba7e-5344e2796f03",
-                        "EntityTypeName": "CPU-Model"
-                    },
-                    "FilterType": "EQUAL",
-                    "FilterValues": ["12/18/2011 4:10:07 AM"],
-                    "Enabled": "True",
-                    "IsNotInCheckDynamicAttributeFilter": "False",
-                    "IsDynamicFilter": "False"
-                },
-                {
-                    "@xsi:type": "OntologyFilter",
-                    "Attribute": {
-                        "AttributeId": "00000000-0000-0000-0000-000000000001",
-                        "AttributeName": "Number of Cores",
-                        "EntityTypeId": "7e865164-4ff3-4e10-ba7e-5344e2796f03",
-                        "EntityTypeName": "CPU-Model"
-                    },
-                    "FilterType": "GREATER_THAN",
-                    "FilterValues": ["2"],
-                    "Enabled": "True",
-                    "IsNotInCheckDynamicAttributeFilter": "False",
-                    "IsDynamicFilter": "False"
-                }
-                  ],
-                  "FilterCombination": null
-              }
-          }
-        ]
-    }
-}
   
 var sampleFilter = {
     "@xsi:type": "OntologyFilterCombination",

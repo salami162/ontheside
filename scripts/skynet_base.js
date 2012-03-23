@@ -1,3 +1,8 @@
+//      skynet_base.js 0.1.0
+//      (c) [2012 - current] Limin Shen.
+//      This file contains the base model created for SkynetWeb name space.
+//      "inventory" and "view_editing" models are derived from the base model.   
+
 // create SkynetWeb namespace
 function SkynetWeb() {
 }

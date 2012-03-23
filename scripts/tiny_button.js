@@ -1,4 +1,7 @@
-﻿(function ($) {
+﻿//     filter_builder.js 0.1.0
+//     (c) [2012 - current] Weston Sewell.
+
+(function ($) {
     var methods = {
         init: function (options) {
             return this.each(function () {

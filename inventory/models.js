@@ -1,3 +1,8 @@
+//     inventory.js 0.1.0
+//     (c) [2012 - current] Limin Shen.
+//     This file contains inventory UI models.  I am testing out doT.js templates in this prototype.  
+
+
 // platform model
 SkynetWeb.Entity = SkynetWeb.BaseModel.extend({
     // Default entity type attributes

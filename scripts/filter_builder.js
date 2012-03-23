@@ -1,4 +1,8 @@
-﻿(function ($) {
+﻿//     filter_builder.js 0.1.0
+//     (c) [2012 - current] Weston Sewell, Limin Shen.
+//     This plugin is a joined effort between me and Weston.  
+
+(function ($) {
 
     var DATA_NAMESPACE = 'filterBuilder';
 
