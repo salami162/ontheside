@@ -4,9 +4,9 @@
 
 
 // platform model
-SkynetWeb.Entity = SkynetWeb.BaseModel.extend({
+OnTheSide.Entity = OnTheSide.BaseModel.extend({
     // Default entity type attributes
-    defaults: _.extend({}, SkynetWeb.BaseModel.prototype.defaults, {
+    defaults: _.extend({}, OnTheSide.BaseModel.prototype.defaults, {
         resource_type: "Entity",
         entity_type_id: null,
         entity_type_name: null,
@@ -18,9 +18,9 @@ SkynetWeb.Entity = SkynetWeb.BaseModel.extend({
     }
 });
 
-SkynetWeb.Platform = SkynetWeb.Entity.extend({
+OnTheSide.Platform = OnTheSide.Entity.extend({
     // Default entity type attributes
-    defaults: _.extend({}, SkynetWeb.Entity.prototype.defaults, {
+    defaults: _.extend({}, OnTheSide.Entity.prototype.defaults, {
         resource_type: "Platform",
         entity_type_id: null,
         entity_type_name: "Platform",
@@ -37,7 +37,7 @@ SkynetWeb.Platform = SkynetWeb.Entity.extend({
     }
 });
 
-SkynetWeb.EntityView = Backbone.View.extend({
+OnTheSide.EntityView = Backbone.View.extend({
     
     initialize: function (args) {
         this.template_def = args.template_def;

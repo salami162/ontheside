@@ -4,20 +4,20 @@
 //      "inventory" and "view_editing" models are derived from the base model.   
 
 // create SkynetWeb namespace
-function SkynetWeb() {
+function OnTheSide() {
 }
 
-SkynetWeb.GuidPattern = new RegExp("^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$");
+OnTheSide.GuidPattern = new RegExp("^[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}$");
 
 // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
-SkynetWeb.methodMap = {
+OnTheSide.methodMap = {
     'create': 'POST',
     'update': 'PUT',
     'delete': 'DELETE',
     'read'  : 'GET'
 };
 
-SkynetWeb.logicFilter = {
+OnTheSide.logicFilter = {
     "EQUAL" : "EQUAL",
     "LIKE"  : "LIKE",
     "NOT_LIKE"  : "NOT_LIKE",
@@ -35,7 +35,7 @@ SkynetWeb.logicFilter = {
 };
 
 // base model
-SkynetWeb.BaseModel = Backbone.Model.extend({
+OnTheSide.BaseModel = Backbone.Model.extend({
     // Default entity type attributes
     defaults : {
         resource_type : null,

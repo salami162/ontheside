@@ -180,6 +180,13 @@ function init_common(section){
           
     $("button").button();
     
+    $('div.choice_link').each(function () {
+        var anchor = $(this);
+        var toggleContent = anchor.siblings('div.choice_content');
+
+        anchor.togglify(toggleContent, true);
+    });
+    
     // define existing constrain for the first
     $(section).find("span.constrain:first").data(sampleFilter);
     $(section).find("span.constrain:first").addClass("hasFilters");
