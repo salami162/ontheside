@@ -130,7 +130,7 @@ $(function() {
     var section = $("div.dynamic");
     var platform_name = "Dracham";
     
-    var platform_model = new SkynetWeb.Platform({
+    var platform_model = new OnTheSide.Platform({
         entity_type_name: "Platform",
         entity_name: platform_name,
     });
@@ -142,7 +142,7 @@ $(function() {
         dimm: $("#dimm-template").html()
     };
     
-    var platform_view = new SkynetWeb.EntityView({
+    var platform_view = new OnTheSide.EntityView({
         model: platform_model,
         el: section,
         model_template: $("#platform-template").html(),

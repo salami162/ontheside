@@ -83,7 +83,7 @@ Backbone.sync = function(method, model, options) {
     Backbone.emulateHTTP = true;
     Backbone.emulateJSON = true;
     var response;    
-    var type = SkynetWeb.methodMap[method];
+    var type = OnTheSide.methodMap[method];
 
     // Default JSON-request options.
     var params = _.extend({
