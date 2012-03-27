@@ -253,7 +253,7 @@ ul.sortable_fake li
 
 div.pivot_type_filter 
 { 
-	background: url("images/ui-bg_highlight-hard_100_e0e0e0_1x100.png") repeat-x scroll 50% 50% #E0E0E0; 
+    background: -moz-linear-gradient(center top , #EEEEEE, #BBBBBB) repeat scroll 0 0 transparent;
 	border: 1px solid #CCCCCC; 
 }
 
