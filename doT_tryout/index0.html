@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Home</title>
+    <link rel="stylesheet" href="../css/redmond/jquery-ui-1.8.16.custom.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../css/redmond/jquery.ui.theme.css" type="text/css" media="screen" /> 
+    <link rel="stylesheet" href="../thirdparty/treeview/jquery.treeview.css" type="text/css"/>
+    <link rel="stylesheet" href="../thirdparty/smartwizard/styles/smart_wizard_vertical.css" type="text/css">
+    <link rel="stylesheet" href="../thirdparty/qtip/jquery.qtip.css" type="text/css"/>
+    <link rel="stylesheet" href="../css/filter_builder.css" type="text/css"/>
+    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap-responsive.css" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="inventory.css" type="text/css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js" type="text/javascript"></script>
+    <script src="http://documentcloud.github.com/underscore/underscore.js" type="text/javascript"></script>
+    <script src="http://documentcloud.github.com/backbone/backbone.js" type="text/javascript"></script>
+    <script src="../thirdparty/handlebars.js" type="text/javascript"></script>
+    <script src="../thirdparty/treeview/jquery.treeview.js" type="text/javascript"></script>
+    <script src="../scripts/base.js" type="text/javascript"></script>
+    <script src="../scripts/filter_builder.js" type="text/javascript"></script>
+    <script src="../scripts/tiny_button.js" type="text/javascript"></script>
+    <script src="../thirdparty/smartwizard/jquery.smartWizard-2.0.js" type="text/javascript" ></script>
+    <script src="../thirdparty/qtip/jquery.qtip.js" type="text/javascript"></script>
+    <script src="models.js" type="text/javascript"></script>
+    <script src="index0.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <h1>Inventory UI - DDR Margining</h1>
+    <div class="swMain">
+        <ul>
+            <li><a href="#step-1">
+            <span class="stepDesc">
+              Configuration<br /><br />
+              <small>Configure the Testing Environment</small>
+            </span>
+        </a></li>
+            <li><a href="#step-2">
+            <span class="stepDesc">
+              Permutation<br /><br />
+              <small>Choose Potential Sweep Seeds</small>
+            </span>
+        </a></li>
+            <li><a href="#step-3">
+            <span class="stepDesc">
+              Constraints<br /><br />
+              <small>Choose Define the Constrains</small>
+            </span>                   
+        </a></li>
+        </ul>
+    
+    <div id="step-1">  
+        <div class=""> 
+            <h2 class="StepTitle">Node Configuration</h2>
+            <div class="node">
+                <table class="config"><tbody>
+                    <tr>
+                        <td colspan="4" align="left"><a class="btn btn-primary btn-mini btn-add" href="#" title="Add"><i class="icon-plus icon-white"></i>Add</a></td>                        
+                    </tr>
+                </tbody></table>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class=""> 
+            <h2 class="StepTitle">DIMM Configuration</h2>
+            <div class="dimm">
+                <table class="config"><tbody>
+                    <tr>
+                        <td>Description</td>
+                        <td class="description" data-config="2GB 133MHz"><span>2GB 133MHz</span></td>  
+                        <td class="row-btn"><a class="btn btn-primary btn-mini btn-edit" href="#" title="Edit" ><i class="icon-edit icon-white"></i></a></td>
+                        <td class="row-btn"><a class="btn btn-primary btn-mini btn-delete" href="#" title="Delete"><i class="icon-trash icon-white"></i></a></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" align="left"><a class="btn btn-primary btn-mini btn-add" href="#" title="Add"><i class="icon-plus icon-white"></i>Add</a></td>                        
+                    </tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+    
+    <div id="step-2">
+        <h2 class="StepTitle">Permutation:</h2> 
+        <div class="permutation">
+        </div>
+    </div>                      
+    
+    <div id="step-3">
+        <h2 class="StepTitle">Define Constaints:</h2>
+        <div class="constraints">
+        </div>
+    </div>
+    
+    </div>
+</body>
+</html>
+
+<!-- Config Row template -->
+<script type="text/x-handlebars-template" id="new_row_template">
+    <tr>
+        <td>Description</td>
+        <td class="description"><input type="text" style="margin-bottom:0px;"></input></td>  
+        <td class="row-btn"><a class="btn btn-primary btn-mini btn-edit" href="#" title="Edit" style="display: none;"><i class="icon-edit icon-white"></i></a></td>
+        <td class="row-btn"><a class="btn btn-primary btn-mini btn-delete" href="#" title="Delete"><i class="icon-trash icon-white"></i></a></td>
+    </tr>
+</script>
+
+<!-- Constraints Templates -->
+<script type="text/x-handlebars-template" id="constraints-template">
+    <ul class="filetree treeview-famfamfam">
+        {{#if num_of_sockets}}
+        <li><span class="level-one">Sockets</span>
+            {{#socket_rendition num_of_sockets num_of_dimms socket_configs dimm_configs}}
+                {{> socket}}
+            {{/socket_rendition}}
+        </li>
+        {{/if}}
+    </ul>
+</script>
+<!-- (EACH) Socket tempalte -->
+<script type="text/x-handlebars-template" id="socket-template">
+    <ul>
+        <li class="closed"> 
+            <span class="allowFilters">Socket {{i}} {{#if num_of_dimms}} {{> constraint}} {{/if}} </span>
+            
+            {{#if num_of_dimms}}
+	            {{#dimm_rendition num_of_dimms}}
+	                {{> dimm}}
+	            {{/dimm_rendition}}
+            {{else}}
+	            {{#each socket_configs}}
+		        	{{> config}}
+		        {{/each}}
+				{{> dimm_config}}
+            {{/if}}
+        </li>
+    </ul>
+</script>
+<!-- (EACH) dimm template -->
+<script type="text/x-handlebars-template" id="dimm-template">
+    <ul>
+        <li>
+            <span class="allowFilters">DIMM Slot {{i}}
+				{{> constraint}}
+            </span> 
+        </li>
+    </ul>
+</script>
+<!-- (EACH) Constraint item template -->
+<script type="text/x-handlebars-template" id="constraint-item-template">
+<!--    <input type="checkbox"  name="barcode" value="true" title="Barcode is Required." class="barcode"/> 
+    <span class="filter" data-model="DIMM_Model">
+        <button class="btn-info btn-mini btn-edit filter" href="#" title="Edit Constraints"><i class="icon-edit icon-white"></i>Constraints</button>
+    </span> -->
+    <input type="checkbox"  name="barcode" value="true" title="Barcode is Required." class="barcode"/> 
+    <span class="constrain">
+        <span class="filter-value filter">&nbsp;</span>
+        <span class="filter" data-model="CPU_Model">Constrains</span>
+        <span class="ui-icon ui-icon-pencil filter"></span>
+    </span> 
+</script>
+
+<!-- Constraints Templates -->
+<script type="text/x-handlebars-template" id="configs-template">
+    <ul class="filetree treeview-famfamfam">
+        {{#if num_of_sockets}}
+        <li><span class="level-one">Sockets</span>
+            {{#socket_rendition num_of_sockets num_of_dimms socket_configs dimm_configs}}
+                {{> socket}}
+            {{/socket_rendition}}
+        </li>
+        {{/if}}
+    </ul>
+</script>
+<!-- (EACH) socket_config template -->
+<script type="text/x-handlebars-template" id="socket-config-template">
+    <ul>
+        <li class="closed"> 
+            <span class="allowFilters">Socket {{i}}
+            </span>
+            {{#each socket_configs}}
+	        	{{> config}}
+	        {{/each}}
+	        
+            {{#if num_of_dimms}}
+                {{> dimm_config}}
+            {{/if}}
+        </li>
+    </ul>
+</script>
+<!-- (EACH) dimm_config template -->
+<script type="text/x-handlebars-template" id="dimm-config-template">
+    <ul>
+        <li class="closed">
+            <span class="allowFilters">All DIMM Slots</span>
+			{{#each dimm_configs}}
+            	{{> config}}
+            {{/each}} 
+        </li>
+    </ul>
+</script>
+<!-- (EACH) configuration item template -->
+<script type="text/x-handlebars-template" id="config-item-template">
+    <ul>
+        <li>
+            <span class="allowFilters">{{this}} <input type="checkbox"  value="true" class="barcode"/> </span> 
+        </li>
+    </ul>
+</script>

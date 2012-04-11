@@ -68,32 +68,13 @@
     <ul>
         {{ for (var i=0; i < it.num_of_sockets; i++) { }}
         <li {{ if (i > 0) { }} class="closed" {{ } }} > 
-            <span class="allowFilters">                 
-                <table class="choice" >
-                    <tr>
-                        <td style="width:15%;">Socket {{= i}}</td>
-                        <td style="width:50%;font-size:10px;">
-                            <div class="choice_link">
-                                <a href='#' style="color:#5C9BCC" >Available Targets</a> 
-                            </div>
-                            <div class="choice_content">
-                                <ul>
-                                    <li><input type="checkbox"  name="choice" value="true" title="choice.">choice 1</input></li>
-                                    <li><input type="checkbox"  name="choice" value="true" title="choice.">choice 2</input></li>
-                                </ul> 
-                            </div>
-                            <div class="clear"></div>
-                        </td>
-                        <td >
-                            <input type="checkbox"  name="barcode" value="true" title="Barcode is Required." class="barcode"/> 
-                            <span class="constrain" data-model="CPU_Model">
-                                <span class="filter-value filter">&nbsp;</span>
-                                <span class="filter">Constrains</span>
-                                <span class="ui-icon ui-icon-pencil filter"></span>
-                            </span>
-                        </td>
-                    </tr>
-                </table>
+            <span class="allowFilters">Socket {{= i}}
+            <input type="checkbox"  name="barcode" value="true" title="Barcode is Required." class="barcode"/> 
+            <span class="constrain" data-model="CPU_Model">
+                <span class="filter-value filter">&nbsp;</span>
+                <span class="filter">Constrains</span>
+                <span class="ui-icon ui-icon-pencil filter"></span>
+            </span>
             </span>
             {{#def.dimm}}
         </li>
@@ -108,26 +89,13 @@
             <ul>
                 {{ for (var j=0; j < it.num_of_dimms/2; j++) { }}
                 <li>
-                    <span class="allowFilters">
-                        <table class="choice">
-                            <tr>
-                                <td style="width:15%;">DIMM Slot {{= k*(it.num_of_dimms/2) + j}} </td>
-                                <td style="width:50%;font-size:10px;color:#218ECE;">
-                                    <input type="checkbox"  name="choice" value="true" title="choice.">2GB 133MHz</input> 
-                                    <input type="checkbox"  name="choice" value="true" title="choice.">4GB 133MHz</input> 
-                                    <input type="checkbox"  name="choice" value="true" title="choice.">2GB 267MHz</input> 
-                                    <input type="checkbox"  name="choice" value="true" title="choice.">4GB 267MHz</input> 
-                                </td>
-                                <td style="alignment-baseline: right">
-                                    <input type="checkbox"  name="barcode" value="true" title="Barcode is Required." class="barcode"/> 
-                                    <span class="constrain" data-model="DIMM_Model">
-                                        <span class="filter-value filter">&nbsp;</span>
-                                        <span class="filter">Constrains</span>
-                                        <span class="ui-icon ui-icon-pencil filter"></span>
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>                        
+                    <span class="allowFilters">DIMM Slot {{= k*(it.num_of_dimms/2) + j}}
+                    <input type="checkbox"  name="barcode" value="true" title="Barcode is Required." class="barcode"/> 
+                    <span class="constrain" data-model="DIMM_Model">
+                        <span class="filter-value filter">&nbsp;</span>
+                        <span class="filter">Constrains</span>
+                        <span class="ui-icon ui-icon-pencil filter"></span>
+                    </span>
                     </span> 
                 </li>
                 {{ } }}
