@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>View Editing</title>
+    <title>Wizard Demo</title>
     <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="../css/redmond/jquery-ui-1.8.16.custom.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="../css/redmond/jquery.ui.theme.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="../thirdparty/treeview/jquery.treeview.css" type="text/css"/>
-    <link rel="stylesheet" href="../thirdparty/smartwizard/styles/smart_wizard_vertical.css" type="text/css">
+    <link rel="stylesheet" href="../thirdparty/smartwizard/styles/smart_wizard_vertical.css" type="text/css" />
     <link rel="stylesheet" href="../css/filter_builder.css" type="text/css"/>
+    <link rel="stylesheet" href="../css/bootstrap/css/bootstrap.css" type="text/css" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js" type="text/javascript"></script>
@@ -21,34 +22,68 @@
     <script src="../scripts/tiny_button.js" type="text/javascript"></script>
     <script src="../thirdparty/smartwizard/jquery.smartWizard-2.0.js" type="text/javascript" ></script>
     <script src="new_models.js" type="text/javascript"></script>
-
+    <script scr="../css/bootstrap/js/bootstrap.js" type="text/javascript"></script>
 </head>
 
 <body>
-    <div class="view_edit"></div>
-    
-    <script>
-        $(function() {
-            var section = $(".view_edit");
-            
-            // model    
-            var currentView = new OnTheSide.DataView({
-                id: view_id,
-                resource_mode: "Description"
-            });
-
-            var viewLayout = new OnTheSide.DataViewLayout({
-                model: currentView,
-                el: $(section),
-                model_template: $("#base-info-template").html(),
-                pivot_hierarchy_layout: pivotLayout,
-                groupby_attributes_layout: groupbyAttrLayout,
-                aggregate_attributes_Layout: aggregateAttrLayout,
-                display_attributes_layout: displayAttrLayout,
-                sort_attributes_layout: sortAttrLayout           
-            });
-            
-        });
-    </script>
+    <h1> Wizard Demo</h1>
+    <div class="wizard">
+        
+    </div>
 </body>
+
+
+<script type="text/template" id="wizard-template">
+    <div class="swMain">
+        <ul>
+            <li><a href="#step-1">
+            <span class="stepDesc">
+               Types<br /><br />
+               <small>Choose Types from the Hierarchy Treeview</small>
+            </span>
+        </a></li>
+            <li><a href="#step-2">
+            <span class="stepDesc">
+               Groupings<br /><br />
+               <small>Choose Groupings</small>
+            </span>
+        </a></li>
+            <li><a href="#step-3">
+            <span class="stepDesc">
+               Attributes<br /><br />
+               <small>Choose Display Attributes and Sortings</small>
+            </span>                   
+         </a></li>
+        </ul>
+    
+        <div id="step-1">
+            <h2 class="StepTitle">Types</h2>
+            <div class="section type"></div>
+            <br />
+        </div>
+    
+        <div id="step-2">
+            {{> attribute_collection}}
+            <div class="clearfix"></div>
+            {{> attribute_collection}}
+        </div>                      
+    
+        <div id="step-3">
+            {{> attribute_collection}}
+            <div class="clearfix"></div>
+            {{> attribute_collection}}
+        </div>
+    
+    </div>        
+</script>
+
+<script type="text/tempalte" id="attribute-template">
+    <div class="section attributes">
+        <h2 class="StepTitle">{{name}}: <button class="btn btn-primary btn-mini"><i class="icon-plus icon-white"></i></button> </h2>     
+        <div>
+            <ul class="sortable {{direction}}"></ul>
+        </div>
+    </div>   
+</script>
+
 </html>

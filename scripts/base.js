@@ -77,20 +77,81 @@ OnTheSide.BaseModel = Backbone.Model.extend({
     }
 });
 
+// Base View
+OnTheSide.BaseView = Backbone.View.extend({
+    
+    initialize : function(args) {
+        this.template = args.template;
+        this.partial_templates = args.partial_templates;
+        
+        if (this.model) {
+            this.model.bind('error', this.alertError, this);
+        }
+        if (this.collection) {
+            this.collection.bind('error', this.alertError, this);
+        }
+    },
+
+    // Re-rendering the App just means refreshing the statistics -- the rest
+    // of the app doesn't change.
+    getRenderHtml : function(renderModel, renderSource) {
+        var source = (!renderSource) ? this.template : renderSource;
+        var compiler = Handlebars.compile(source);
+        if(this.partial_templates) {
+            var i = 0;
+            for( i = 0; i < this.partial_templates.length; i++) {
+                Handlebars.registerPartial(this.partial_templates[i].name, this.partial_templates[i].html);
+            }
+        }
+        renderModel = (!renderModel)? this.model : renderModel;
+        var handlerBarHtml = compiler(renderModel.toJSON());
+        return handlerBarHtml;
+    },
+    
+    alertError: function (model, jqXHR, options) {
+        alert("Return Code: " + jqXHR.Code + "\nMessage: " + jqXHR.Message);
+    }
+});
+
+// Wrap an optional error callback with a fallback error event.
+OnTheSide.wrapError = function(onError, originalModel, options) {
+    return function(jqXHR, textStatus) {
+        resp = model === originalModel ? resp : model;
+        if (onError) {
+            onError(originalModel, jqXHR, options);
+        } else {
+            originalModel.trigger('error', originalModel, jqXHR, options);
+        }
+    };
+};
+
+  // Wrap an optional error callback with a fallback error event.
+OnTheSide.wrapSuccess = function(onSuccess, originalModel) {
+    return function(resp, status, xhr) {
+        if (!resp.Code) {   
+            if (onSuccess) onSuccess(resp, status, xhr);
+        }
+        else {
+            //alert("Return Code: " + resp.Code + "\nMessage: " + resp.Message);
+            originalModel.trigger('error', originalModel, resp);
+        }        
+    };
+};
+
 
 Backbone.sync = function(method, model, options) {
 
     Backbone.emulateHTTP = true;
     Backbone.emulateJSON = true;
     var response;    
-    var type = OnTheSide.methodMap[method];
+    var type = SkynetWeb.methodMap[method];
 
     // Default JSON-request options.
     var params = _.extend({
       type:         type,
       dataType:     'json'
     }, options);
-
+ 
     // Ensure that we have a URL.
     if (!params.url) {
       params.url = model.getUrl() || model.raiseError('Failed to compose request URL from Name and Id');
@@ -111,8 +172,10 @@ Backbone.sync = function(method, model, options) {
     // For older servers, emulate HTTP by mimicking the HTTP method with `_method`
     // And an `X-HTTP-Method-Override` header.
     if (Backbone.emulateHTTP) {
-      if (type === 'PUT' || type === 'DELETE') {
-        if (Backbone.emulateJSON) params.data._method = type;
+      if (type === 'PUT' || type === 'DELETE' || type === 'POST') {
+        if (Backbone.emulateJSON){ 
+            params.data._method = type;
+        }
         params.type = 'POST';
 /*      params.beforeSend = function(xhr) {
             xhr.setRequestHeader('X-HTTP-Method-Override', type);
@@ -125,22 +188,17 @@ Backbone.sync = function(method, model, options) {
       params.processData = false;
     }
     
-    // If C++ object exists, call QT controller
-    if (!(typeof requestor === "undefined")) {
-        requestor.request(params.url, params.type, params.data, function (response) {
-            var jsonObj = $.parseJSON(response);
-            if (jsonObj != null) {
-            options.success(jsonObj);
-            } else {
-            options.error("Request to Server Failed.");
-            }           
-        });
+    // fix IE caching URL on GET
+    if (params.type == 'GET') {
+        params.data = _.extend(params.data, {timestamp: new Date().getTime()});
     }
-    else {
-        response = $.ajax(params);
-    }
+
+    params.success = SkynetWeb.wrapSuccess(params.success, model);    
+
+    response = $.ajax(params);
     
     return response;
 };
+
  
  
