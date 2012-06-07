@@ -9,7 +9,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.static(__dirname + '/public')); //dir of the currently executing script.
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
