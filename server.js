@@ -14,9 +14,13 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
 });
 
+// setup server routes 
+var routes = require('./server/routes');
+app.use(routes);
+
 // setup view engine
 express.view.register('.hbs', hbs);
-app.set('views', __dirname + '/public/views');
+app.set('views', __dirname + '/server/views');
 app.set('view engine', 'hbs');
 var blocks = {};
 
@@ -48,11 +52,7 @@ app.configure('development', function(){
 });
 
 
-app.get('/', function (req, res) {
-  res.render('index', {
-    title : 'Give Pulse'
-  });
-});
+app.get('/', routes.index);
 
 
 app.listen(1234);

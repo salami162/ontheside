@@ -1,7 +1,3 @@
-{{#extend "stylesheets"}}
-{{/extend}}
-
-<script>
   window._gaq = [['_setAccount','UA1234'],['_trackPageview'],['_trackPageLoadTime']];
   
 /*	  (function() {
@@ -11,12 +7,8 @@
 	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
 	  */
-</script>
-
-1234;
-
-{{#extend "scripts"}}
-<script>
-  document.write('foo bar!');
-</script>
-{{/extend}}
+	$(function() {
+	 	//$('#login').modal();
+	 	$('.barWrap').emailfy();
+//    $("input").labelify({ text: "label" });
+	});
