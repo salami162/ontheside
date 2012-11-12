@@ -1,16 +1,7 @@
 *.sassc
 *.scssc
-static/Gemfile.lock
-static/build/*
-static/dev/styl/screen.styl
-static/dev/stylesheets/*.css
-static/dev/stylesheets/*/*.css
-static/dev/stylesheets/*/*/*.css
 .monitor
 dist/
-
-# As a courtesy ignore the old config file
-config/firebird-local.conf
 
 # Numerous always-ignore extensions
 *.diff
