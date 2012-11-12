@@ -46,6 +46,7 @@ dwsync.xml
 .svn
 intermediate
 publish
+node_modules
 .idea
 
 # node-cover
