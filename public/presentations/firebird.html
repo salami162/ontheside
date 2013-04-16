@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Firebird - Rise From the Ashes </title>
+
+    <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+    <meta name="author" content="Hakim El Hattab">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <link rel="stylesheet" href="/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="/reveal.js/css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="/reveal.js/lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="/reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+
+        <section>
+          <h1>Firebird</h1>
+          <h3>Client-side Powered BazaarVoice App</h3>
+          <p>
+            Team Members:
+            <ul>
+              <small>
+              <li><a href="#">Joel Comeaux</a></li>
+              <li><a href="#">Aaron Forsander</a></li>
+              <li><a href="#">Christian Johannessen</a></li>
+              <li><a href="#">Rob Kumar</a></li>
+              <li><a href="#">Brian Luskey</a></li>
+              <li><a href="#">Chris Norris</a></li>
+              <li><a href="#">Alex Sexton</a></li>
+              <li><a href="#">Limin Shen</a></li>
+              <li><a href="#">Xenia Tay</a></li>
+              <li><a href="#">Oliver Wong</a></li>
+              <li><a href="#">Alex Zelenak</a></li>
+              </small>
+            </ul>
+          </p>
+
+          <aside class="notes">
+            Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+          </aside>
+        </section>
+
+        <!-- Example of nested vertical slides -->
+        <section>
+          <section>
+            <h2>What is Firebird?</h2>
+            <p class="fragment">Firebird is the project name for the latest generation of consumer-facing Bazaarvoice applications. </p>
+          </section>
+          <section>
+            <h2>Highlights</h2>
+            <ul>
+              <li class="fragment">100% Javascript. Server and Client.</li>
+              <li class="fragment">We only ship a static clientside file.</li>
+              <li class="fragment">Uses the SAME Dev API as our clients.</li>
+              <li class="fragment">Client-side rendered.</li>
+              <li class="fragment">Reduce the # of requests to the server.</li>
+              <li class="fragment">Minimize the size of the entire application.</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>What Technologies are We Using?</h2>
+          </section>
+          <section>
+            <h2><a href="http://requirejs.org/" target="_blank">RequireJS</a></h2>
+            <p>A JavaScript file and module loader.</p>
+            <br />
+            <h2><a href="http://requirejs.org/" target="_blank">Node.js</a></h2>
+            <p>A platform built on Chrome's Javascript runtime for easily building fast, scalable network applications.</p>
+            <br />
+            <h2><a href="http://requirejs.org/" target="_blank">Express.js</a></h2>
+            <p>Fast, unopinionated, minimalist web framework for Node.js.</p>
+          </section>
+          <section>
+            <h2><a href="http://backbonejs.org/" target="_blank">Backbone.js</a></h2>
+            <p>A client-side Javascript Framework, which provides structure to your web application.</p>
+            <br />
+            <h2><a href="http://handlebarsjs.com/" target="_blank">Handlebars.js</a></h2>
+            <p>A Javascript template engine, which allows you to write clean, dynamic Markups.</p>
+            <br />
+            <h2><a href="http://learnboost.github.com/stylus/" target="_blank">Stylus</a></h2>
+            <p>Expressive and dynamic CSS.</p>
+          </section>
+          <section>
+            <h2><a href="http://jquery.com/" target="_blank">jQuery</a></h2>
+            <p>A Javascript Library</p>
+            <h2><a href="https://github.com/SlexAxton/require-handlebars-plugin" target="_blank">hbs.js</a></h2>
+            <p>Require.js Handlebars Plugin.</p>
+            <h2><a href="https://github.com/SlexAxton/messageformat.js" target="_blank">MessageFormat.js</a></h2>
+            <p>MessageFormat (PluralFormat + SelectFormat) is a mechanism for handling both pluralization and gender in your applications. </p>
+          </section>
+         </section>
+
+        <section>
+          <section>
+            <h2>Cool Things about Firebird</h2>
+          </section>
+          <section>
+            <h2>Magic Firebuild.</h2>
+            <p>We custom build a javascript app for each client based on the their bhive configuration.  That's cool for number of reasons.</p>
+            <ul>
+              <li class="fragment">We can build out the code that we don't need</li>
+              <li class="fragment">The whole app is a static Javascript file, which lives in Amazon S3.  That means we don't need to have a dedicated end-user facing server up running all the time.  Big win on the reliability. </li>
+              <li class="fragment">All the dynamic content comes from API</li>
+            </ul>
+          </section>
+          <section>
+            <p class="fragment">Fully Responsive Design.</p>
+            <p class="fragment">...</p>
+            <p class="fragment">Lots more.</p>
+          </section>
+        </section>
+
+        <section>
+          <h2>Configuration JSON</h2>
+          <p>In order to interoperate with self-service effectively, Firebird team decided to make our app to be as modular as possible. </p>
+          <p>Thanks to Alex Sexton's brilliant idea/vision.</p>
+        </section>
+
+        <section>
+          <section>
+            <h2>Modular?</h2>
+            <p class="fragment">3 Concepts: </p>
+            <ul>
+              <li class="fragment">Components</li>
+              <li class="fragment">Features</li>
+              <li class="fragment">Outlets</li>
+            </ul>
+          </section>
+          <section>
+            <h2>What is a Component?</h2>
+            <p class="fragment">We consider a component as a standalone UI widget, which can function properly by itself and interacts with other components as well.</p>
+            <pre class="fragment"><code contenteditable>
+      reviewContentList1 : {
+        componentId : 'reviewContentList1',
+        container : 'BVRRContainer',
+        subjectType : 'Products',
+        contentType : 'Reviews',
+        type : 'contentList',
+        autoload : true,
+        features : {
+          ...
+        },
+        outlets : {
+          ...
+        }
+      }
+            </code></pre>
+          </section>
+          <section>
+            <h2>What is a Feature?</h2>
+            <p class="fragment">Feature is a smaller UI element, which usually belongs to a larger feature/component.  A feature shall be able to turn on and off easily.</p>
+            <pre class="fragment"><code contenteditable>
+reviewContentList1 : {
+  ...
+  features : {
+    self : ['contentItemCollection', 'pagination', 'ugcCount'],
+    contentItem : ['has:stars', 'avatar', 'feedback'],
+    pagination : ['ugcCount']
+  },
+  ...
+}
+            </code></pre>
+          </section>
+          <section>
+            <h2>What is an Outlet?</h2>
+            <p class="fragment">Outlet is the bridge that connects different components.</p>
+            <pre class="fragment"><code contenteditable>
+reviewContentList1 : {
+  ...
+  outlets : {
+    showsubmission : [{
+      component :'reviewSubmission1',
+      scope : 'rr',
+      action : 'submit_review'
+    }],
+    showmediaviewer: [{
+      component: 'mediaViewer1',
+      event: 'open'
+    }],
+    showfullprofile : [{
+      component : "fullProfilePopup1",
+      event: "launchprofile"
+    }]
+  }.
+  ...
+}
+            </code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>How to Wire Events between Components?</h2>
+            <pre class="fragment"><code contenteditable>
+reviewSummary1 : {
+  ...
+  outlets : {
+    showreviews : [{
+      component : 'reviewContentList1',
+      event : 'scrolltocontent'
+    }],
+    ...
+  }.
+  ...
+}
+            </code></pre>
+          </section>
+          <section>
+          <pre><code contenteditable>
+reviewSummary1 : {
+  ...
+  outlets : {
+    showreviews : [{
+      component : 'reviewContentList2',
+      event : 'scrolltocontent'
+    }],
+    ...
+  }.
+  ...
+}
+          </code></pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>How to turn on/off a feature?</h2>
+            <pre><code contenteditable>
+      reviewSummary1 : {
+        ...
+        features : {
+          self : []
+        },
+        ...
+      }
+            </code></pre>
+          </section>
+          <section>
+          <pre><code contenteditable>
+      reviewSummary1 : {
+        ...
+        features : {
+          self : ['histogram', 'has:stars']
+        },
+        ...
+      }
+          </code></pre>
+          </section>
+        </section>
+
+        <section>
+          <h1>Demo?</h1>
+        </section>
+
+        <section>
+          <h1>Thank You!</h1>
+          <h3>BY Limin Shen</h3>
+        </section>
+
+      </div>
+
+    </div>
+
+    <script src="/reveal.js/lib/js/head.min.js"></script>
+    <script src="/reveal.js/js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: '/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: '/reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: '/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: '/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
