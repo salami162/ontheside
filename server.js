@@ -3,20 +3,21 @@ const express = require('express');
 const hbs = require('hbs');
 const _ = require('underscore');
 
-
-
 var app = express.createServer();
+app.enable("jsonp callback");
 
 // Configuration
 app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.bodyParser());
+  app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });
 
 // setup server routes 
 var routes = require('./server/routes');
-app.use(routes);
+var api = require('./server/routes/api');
+
 
 // setup view engine
 express.view.register('.hbs', hbs);
@@ -53,7 +54,7 @@ app.configure('development', function(){
 
 
 app.get('/', routes.index);
-
+api.routes('/api', app);
 
 app.listen(1234);
 
