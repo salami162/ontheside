@@ -1,7 +1,7 @@
 *.sassc
 *.scssc
 .monitor
-node_modules/
+dist/
 
 # Numerous always-ignore extensions
 *.diff
