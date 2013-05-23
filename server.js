@@ -4,6 +4,7 @@ var _ = require('underscore');
 
 
 var app = express();
+app.enable("jsonp callback");
 
 // Configuration
 app.configure(function(){
@@ -12,12 +13,14 @@ app.configure(function(){
   app.set('view engine', 'jade');
   app.use(express.methodOverride());
   app.use(express.bodyParser());
+  app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });
 
 // setup server routes
 var routes = require('./server/routes');
-app.use(routes);
+var api = require('./server/routes/api');
+
 
 // set jade as template engine
 // app.engine('jade', require('jade').__express);
@@ -34,7 +37,7 @@ app.configure('development', function(){
 
 
 app.get('/', routes.index);
-
+api.routes('/api', app);
 
 app.listen(1234);
 
