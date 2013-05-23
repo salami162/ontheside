@@ -1,7 +1,11 @@
 var _ = require('underscore');
 
+
 exports.index = function (req, res) {
-  res.render('index', {});
+  var data = {
+    title : 'Limin Shen'
+  };
+  res.render('index', data);
 };
 
 

@@ -1,7 +1,0 @@
-{
-    "attributeMap":{
-        "Feature":["Name","Comment","Design Risk","ReleaseToEngineering","POR","Priority","Review Tracking","SkynetFeatureID","TargetCapabilitySupport","Technology Risk","Weight","LastUpdated","DateCreated","CreatedBy"],
-        "CapabilitySupport":["CapabilitySupportID","Name","TargetOperatingSystem","TargetProduct","TargetProduct Revision","TargetProductFamily","LastUpdated","DateCreated","CreatedBy"]
-    },
-    "operators":["Equal","Like","Not like","Not equal","Less than","Greater than","In","Not in","Between","Not between","Greater than or equal","Less than or equal","Is null","Is not null"]
-}
