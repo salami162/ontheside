@@ -2,9 +2,8 @@ Author:
   Limin Shen
 
 Description:
-  This project contains multiple mini-projects.  Most of them are created as prototype for my work project.
+  Something fun.
 
-Folder Structure:
-  /css			<-- shared css files for multiple mini projects.
-  /scripts		<-- shared javascript files.
-  /thirdparty	<-- plugins developed by other people I found that are useful to my projects.
+Once you checkout the repo, please run ```npm install``` to download all the node modules that are used in the project.
+
+```./run.sh``` to start the server.
