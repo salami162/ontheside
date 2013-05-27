@@ -8,9 +8,7 @@ define([
 
     initialize : function (attrs, options) {
       this.set({
-        baseUrl : 'http://web-cdh4-bv-io-client-graph.mag.bazaarvoice.com:8080/api/graph/client',
-        stack : 'staging',
-        passkey : 'e7da1235-02e6-4a77-b0f8-a0444f278aab'
+        baseUrl : 'http://localhost:3000/clientGraph'
       });
     },
 
@@ -21,16 +19,13 @@ define([
     },
 
     url : function () {
-      var fetchUrl = this.get('baseUrl') + '?passkey=' + this.get('passkey');
-      var params = {
-        stack : this.get('stack')
-      };
-      _(params).extend(this.get('filters'));
-
+      var fetchUrl = this.get('baseUrl');
+      var params = _.extend( {}, this.get('filters') );
+      var paramString = '';
       _(params).forEach(function (val, key) {
-        fetchUrl = fetchUrl + '&' + key + '=' + val;
+        paramString = paramString + key + '=' + val + '&';
       });
-      return fetchUrl;
+      return fetchUrl + '?' + paramString.substring(0, paramString.length - 1);
     },
 
     fetch : function () {
@@ -39,15 +34,9 @@ define([
       var fetchData = $.ajax({
         url : fetchUrl,
         dataType : 'jsonp',
+        async : true,
         cache : false,
-        timeout : 20000,
-        jsonpCallback : 'bvio' + $.fn.jquery.replace(/\./ig, "") + '_' + Date.now(),
-        success : function(json) {
-          console.dir(json.sites);
-        },
-        error : function(e) {
-          console.log(e.message);
-        }
+        timeout : 20000
       });
 
       return fetchData;

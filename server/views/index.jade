@@ -2,4 +2,20 @@ extends layout
 
 block content
   div.main
-    svg.chart
+
+    form#clientGraph(action='/clientGraph')
+      div.input-filters
+        div.time-frame
+          span.time-frame-label Time Frame:
+          select#time-frame(name='timeFrame')
+            option(value="LAST_30_DAYS") Last 30 days
+            option(value="LAST_7_DAYS") Last 7 days
+            option(value="LAST_DAY") Last day
+        div.weight-limit
+          span.weight-limit-label Minimal Weight:
+          input#weight-limit.input-large(name='minWeight', type='text', placeholder='30')
+        div.update
+          button#update-chart.btn(type='button') Go!
+
+    div.output-chart
+      svg.chart

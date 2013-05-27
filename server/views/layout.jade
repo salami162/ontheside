@@ -3,8 +3,21 @@ html
   head
     title= title
     link(rel='stylesheet', href='/styles/bootstrap.css')
+    link(rel='stylesheet', href='/styles/style.css')
   body
     div.navbar.navbar-inverse.navbar-fixed-top
+      div.navbar-inner
+        div.container
+          a.brand(href='/')
+            strong B
+            strong V
+            strong I
+            strong O
+          div.nav-collapse.collapse
+            select#stack
+              option(value="production") Production
+              option(value="staging") Staging
+            span.stack-label Environment:
 
     div.container
 
