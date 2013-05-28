@@ -83,17 +83,7 @@ define([
       // this.bundleGraph(data);
     },
 
-    forceGraph : function (data) {
-      var force = d3.layout.force()
-          .gravity(0.05)
-          .distance(300)
-          .charge(-500)
-          .size([this.width, this.height]);
-      force
-          .nodes(data.nodes)
-          .links(data.links)
-          .start();
-
+    _createMarkers : function () {
       this.svgChart.append('svg:defs').append('svg:marker')
           .attr('id', 'end-arrow')
           .attr('viewBox', '0 -5 10 10')
@@ -103,7 +93,7 @@ define([
           .attr('orient', 'auto')
         .append('svg:path')
           .attr('d', 'M0,-5L10,0L0,5')
-          .attr('fill', '#000');
+          .attr('fill', '#999');
 
       this.svgChart.append('svg:defs').append('svg:marker')
           .attr('id', 'start-arrow')
@@ -114,12 +104,101 @@ define([
           .attr('orient', 'auto')
         .append('svg:path')
           .attr('d', 'M10,-5L0,0L10,5')
-          .attr('fill', '#000');
+          .attr('fill', '#999');
+    },
+
+    _displayWeight : function (d) {
+      var self = this;
+      var links = this.svgChart.selectAll('path.link.' + d.name)
+        .classed('highlight', true);
+
+      _(links[0]).forEach(function(slink) {
+        var pathText = self.svgChart.append("text")
+          .attr('class','link_text')
+          .attr('x', 20)
+          .attr('dy', 25);
+
+        pathText.append('textPath')
+          .attr('xlink:href', function() {
+            return '#' + slink.id;
+          })
+          .attr('class','text_path')
+          .style('fill','#000')
+          .text(function(text, i) {
+            var ids = slink.id.split('_');
+            return ids.pop();
+          });
+      });
+    },
+
+    _removeDisplay : function (d) {
+      this.svgChart
+        .selectAll('path.link.' + d.name)
+        .classed('highlight', false);
+
+      this.svgChart
+        .selectAll('text.link_text')
+        .remove();
+    },
+
+    _addSticky : function (d) {
+      d.fixed = true;
+      d3.select(this).select('circle')
+        .classed('sticky', true);
+    },
+
+    _onTick : function () {
+      var link = this.svgChart.selectAll('.link')
+      var node = this.svgChart.selectAll('.node')
+      // draw directed edges with proper padding from node centers
+      link.attr('d', function(d) {
+        var deltaX = d.target.x - d.source.x,
+            deltaY = d.target.y - d.source.y,
+            dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+            normX = deltaX / dist,
+            normY = deltaY / dist,
+            sourcePadding = d.left ? 17 : 12,
+            targetPadding = d.right ? 17 : 12,
+            sourceX = d.source.x + (sourcePadding * normX),
+            sourceY = d.source.y + (sourcePadding * normY),
+            targetX = d.target.x - (targetPadding * normX),
+            targetY = d.target.y - (targetPadding * normY);
+        return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+      });
+
+      node.attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; });
+    },
+
+    forceGraph : function (data) {
+      var self = this;
+      var longestPath = _(data.links).max(function (path) {
+        return path.value;
+      });
+      var ratio = 300 / longestPath.value;
+
+      var force = d3.layout.force()
+          .gravity(0.05)
+          .distance(function (d) {
+            return d.value * ratio;
+          })
+          .charge(-500)
+          .size([this.width, this.height]);
+      force
+          .nodes(data.nodes)
+          .links(data.links)
+          .start();
+
+      this._createMarkers();
 
       var link = this.svgChart.selectAll('.link')
           .data(data.links)
         .enter().append('svg:path')
-          .attr("class", "link")
+          .attr('class', function (d) {
+            return 'link ' + d.source.name + ' ' + d.target.name;
+          })
+          .attr('id', function (d) {
+            return d.source.name + '_' + d.target.name + '_' + d.value;
+          })
           .style("stroke-width", function(d) {
             return (d.value / 20);
           })
@@ -133,45 +212,23 @@ define([
       var node = this.svgChart.selectAll('.node')
           .data(data.nodes)
         .enter().append('svg:g')
-          .attr('class', 'node')
+          .attr('class', function (d) {
+            return 'node ' + d.name;
+          })
           .call(force.drag)
-          .on('mousedown', function(d) {
-            d.fixed = true;
-            var selectedNode = d3.select(this).select('circle')
-              .classed('sticky', true);
-          });
+          .on( 'mouseover', _.bind(this._displayWeight, this) )
+          .on( 'mouseout', _.bind(this._removeDisplay, this) )
+          .on( 'mousedown', this._addSticky);
 
       node.append('circle')
-        .attr('r', 12);
+        .attr('r', 10);
 
       node.append('text')
           .attr('dx', 16)
           .attr('dy', '.95em')
           .text(function(d) { return d.name; });
 
-      force.on('tick', function() {
-        link.attr('x1', function(d) { return d.source.x; })
-            .attr('y1', function(d) { return d.source.y; })
-            .attr('x2', function(d) { return d.target.x; })
-            .attr('y2', function(d) { return d.target.y; });
-        // draw directed edges with proper padding from node centers
-        link.attr('d', function(d) {
-          var deltaX = d.target.x - d.source.x,
-              deltaY = d.target.y - d.source.y,
-              dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-              normX = deltaX / dist,
-              normY = deltaY / dist,
-              sourcePadding = d.left ? 17 : 12,
-              targetPadding = d.right ? 17 : 12,
-              sourceX = d.source.x + (sourcePadding * normX),
-              sourceY = d.source.y + (sourcePadding * normY),
-              targetX = d.target.x - (targetPadding * normX),
-              targetY = d.target.y - (targetPadding * normY);
-          return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
-        });
-
-        node.attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; });
-      });
+      force.on( 'tick', _.bind(this._onTick, this) );
     },
 
     bundleGraph : function (data) {
