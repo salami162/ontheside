@@ -75,7 +75,9 @@ function processData (rawData) {
       return {
         source : edge.from - 1,
         target : edge.to - 1,
-        value : edge.weight
+        value : edge.weight,
+        left : false,
+        right : true
       };
     });
   return graphData;
