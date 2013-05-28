@@ -1,8 +1,7 @@
 extends layout
 
 block content
-  div.main
-
+  div.client-graph
     form#clientGraph(action='/clientGraph')
       div.input-filters
         div.time-frame
@@ -17,5 +16,5 @@ block content
         div.update
           button#update-chart.btn(type='button') Go!
 
-    div.output-chart
+    div.client-graph-chart
       svg.chart
