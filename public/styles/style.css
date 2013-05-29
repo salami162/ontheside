@@ -12,7 +12,10 @@ a {
 }
 
 .node circle {
-  fill : #99c;
+  fill: #ff7f0e;
+  stroke: steelblue;
+  pointer-events: all;
+  stroke-width: 1.5px;
 }
 
 .node circle.sticky {
@@ -21,6 +24,7 @@ a {
 
 .link {
   stroke: #999;
+  fill: none;
   stroke-opacity: .6;
 }
 
@@ -35,38 +39,32 @@ path.link.highlight {
   cursor: default;
 }
 
-svg:not(.active):not(.ctrl) path.link {
-  cursor: pointer;
-}
-
-path.link.selected {
-  stroke-dasharray: 10,2;
-}
-
-path.link.dragline {
-  pointer-events: none;
-}
-
-path.link.hidden {
-  stroke-width: 0;
-}
-
-circle.node {
-  stroke-width: 1.5px;
-  cursor: pointer;
-}
-
-circle.node.reflexive {
-  stroke: #000 !important;
-  stroke-width: 2.5px;
-}
-
 text {
-  font: 12px sans-serif;
+  font-size: 11px;
   pointer-events: none;
 }
 
-text.id {
-  text-anchor: middle;
-  font-weight: bold;
+text.parent {
+  fill: #1f77b4;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #999;
+  pointer-events: all;
+}
+
+circle.parent {
+  fill: #1f77b4;
+  fill-opacity: .1;
+  stroke: steelblue;
+}
+
+circle.parent:hover {
+  stroke: #ff7f0e;
+  stroke-width: .5px;
+}
+
+circle.child {
+  pointer-events: none;
 }

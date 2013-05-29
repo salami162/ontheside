@@ -25,3 +25,24 @@ exports.clientGraph = function (req, res) {
       });
 };
 
+exports.clientDashboard = function (req, res) {
+  if ( !req.query.client ) {
+    return res.jsonp(500, {
+      error : 'Client Name is required.'
+    });
+  }
+
+
+  BVIO()
+    .setClient(req.query.client)
+    .setFilterDates(req.query.timeFrame || 'LAST_30_DAYS')
+    .request('clientDashboard')
+      .done(function (data) {
+        res.jsonp(200, data);
+      })
+      .fail(function (error) {
+        res.jsonp(500, {
+          error : 'Request server data failed!'
+        });
+      });
+};

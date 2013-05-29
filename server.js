@@ -31,6 +31,7 @@ if ('development' === app.get('env')) {
 }
 
 app.get('/clientGraph', routes.clientGraph);
+app.get('/clientDashboard', routes.clientDashboard);
 app.get('/', routes.index);
 
 http.createServer(app).listen(app.get('port'), function(){

@@ -9,9 +9,10 @@ define([
 
     initialize : function (attrs, options) {
       this.set({
-        baseUrl : 'http://localhost:3000/clientGraph'
+        baseUrl : 'http://localhost:3000'
       });
-      this.listenTo(this, 'fetchClientGraph', this.fetch);
+      this.listenTo(this, 'fetchClientGraph', this.fetchClientGraph);
+      this.listenTo(this, 'fetchClientDashboard', this.fetchClientDashboard);
     },
 
     setFilters : function (filters) {
@@ -20,8 +21,8 @@ define([
       this.set('filters', currentFilters);
     },
 
-    url : function () {
-      var fetchUrl = this.get('baseUrl');
+    url : function (type) {
+      var fetchUrl = this.get('baseUrl') + '/' + type;
       var params = _.extend( {}, this.get('filters') );
       var paramString = '';
       _(params).forEach(function (val, key) {
@@ -30,12 +31,12 @@ define([
       return fetchUrl + '?' + paramString.substring(0, paramString.length - 1);
     },
 
-    fetch : function (filters) {
+    fetchClientGraph : function (filters) {
       var self = this;
       this.setFilters(filters);
 
       var fetchRequest = $.ajax({
-        url : this.url(),
+        url : this.url('clientGraph'),
         dataType : 'jsonp',
         async : true,
         cache : false,
@@ -43,7 +44,27 @@ define([
       });
 
       fetchRequest.done(function (data) {
-        self.trigger('drawGraph', data);
+        self.trigger('drawClientGraph', data);
+      })
+      .fail(function (error) {
+        self.trigger('showError', error);
+      });
+    },
+
+    fetchClientDashboard : function (client) {
+      var self = this;
+      this.setFilters({ client : client });
+
+      var fetchRequest = $.ajax({
+        url : this.url('clientDashboard'),
+        dataType : 'jsonp',
+        async : true,
+        cache : false,
+        timeout : 20000
+      });
+
+      fetchRequest.done(function (data) {
+        self.trigger('drawClientDashboard', data);
       })
       .fail(function (error) {
         self.trigger('showError', error);
@@ -53,8 +74,8 @@ define([
 
   var clientGraphView = Backbone.View.extend({
     name : 'clientGraph',
-    width : 1000,
-    height : 600,
+    width : 1280,
+    height : 800,
 
     events: {
       'click button#update-chart': 'updateChart'
@@ -65,7 +86,8 @@ define([
       this.svgChart = d3.select('svg')
                       .attr('width', this.width)
                       .attr('height', this.height);
-      this.listenTo(this.model, 'drawGraph', this.drawGraph);
+      this.listenTo(this.model, 'drawClientGraph', this.drawClientGraph);
+      this.listenTo(this.model, 'drawClientDashboard', this.drawClientDashboard);
     },
 
     updateChart : function (e) {
@@ -77,7 +99,7 @@ define([
       this.model.trigger('fetchClientGraph', filters);
     },
 
-    drawGraph : function (data) {
+    drawClientGraph : function (data) {
       this.$('svg.chart').empty();
       this.forceGraph(data);
       // this.bundleGraph(data);
@@ -148,8 +170,8 @@ define([
     },
 
     _onTick : function () {
-      var link = this.svgChart.selectAll('.link')
-      var node = this.svgChart.selectAll('.node')
+      var link = this.svgChart.selectAll('.link');
+      var node = this.svgChart.selectAll('.node');
       // draw directed edges with proper padding from node centers
       link.attr('d', function(d) {
         var deltaX = d.target.x - d.source.x,
@@ -218,7 +240,11 @@ define([
           .call(force.drag)
           .on( 'mouseover', _.bind(this._displayWeight, this) )
           .on( 'mouseout', _.bind(this._removeDisplay, this) )
-          .on( 'mousedown', this._addSticky);
+          .on( 'mousedown', this._addSticky)
+          .on( 'dblclick', function (d) {
+            console.log('double click');
+            self.model.trigger('fetchClientDashboard', d.name);
+          });
 
       node.append('circle')
         .attr('r', 10);
@@ -289,6 +315,164 @@ define([
             .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
             .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
             .text(function(d) { return d.key; });
+    },
+
+    drawClientDashboard : function (data) {
+      this.$('svg.chart').empty();
+      this.treeGraph(data);
+    },
+
+    treeGraph : function (data) {
+      var m = [20, 120, 20, 120],
+          w = this.width - m[1] - m[3],
+          h = this.height - m[0] - m[2],
+          i = 0;
+      var maxSize = data.size;
+
+      var tree = d3.layout.tree()
+          .size([h, w]);
+
+      var diagonal = d3.svg.diagonal()
+          .projection(function(d) {
+            return [d.y, d.x];
+          });
+
+      var vis = this.svgChart
+          .attr("width", w + m[1] + m[3])
+          .attr("height", h + m[0] + m[2])
+        .append("svg:g")
+          .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+        data.x0 = h / 2;
+        data.y0 = 0;
+
+        function toggleAll(d) {
+          if (d.children) {
+            d.children.forEach(toggleAll);
+            toggle(d);
+          }
+        }
+
+        // Initialize the display to show a few nodes.
+        data.children.forEach(toggleAll);
+        toggle(data.children[1]);
+        toggle(data.children[1].children[2]);
+
+        update(data);
+
+      function update(source) {
+        var duration = d3.event && d3.event.altKey ? 5000 : 500;
+
+        // Compute the new tree layout.
+        var nodes = tree.nodes(data).reverse();
+
+        // Normalize for fixed-depth.
+        nodes.forEach(function(d) { d.y = d.depth * 180; });
+
+        // Update the nodes…
+        var node = vis.selectAll("g.node")
+            .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+        // Enter any new nodes at the parent's previous position.
+        var nodeEnter = node.enter().append("svg:g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+            .on("click", function(d) { toggle(d); update(d); });
+
+        nodeEnter.append("svg:circle")
+            .attr("r", 1e-6)
+            .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+        nodeEnter.append("svg:text")
+            .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+            .attr("dy", ".35em")
+            .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+            .text(function(d) {
+              var string = d.name;
+              if (d.size && !d.isRoot) {
+                string = string + '(' + d.size + ')';
+              }
+              return string;
+            })
+            .style("fill-opacity", 1e-6);
+
+        // Transition nodes to their new position.
+        var nodeUpdate = node.transition()
+            .duration(duration)
+            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+        nodeUpdate.select("circle")
+            .attr("r", function (d) {
+              var s = d.size ? Math.max( ((30/maxSize) * d.size) , 4.5) : 4.5;
+              return s;
+            })
+            // .attr("r", 4.5)
+            .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+        nodeUpdate.select("text")
+            .style("fill-opacity", 1);
+
+        // Transition exiting nodes to the parent's new position.
+        var nodeExit = node.exit().transition()
+            .duration(duration)
+            .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+            .remove();
+
+        nodeExit.select("circle")
+            .attr("r", 1e-6);
+
+        nodeExit.select("text")
+            .style("fill-opacity", 1e-6);
+
+        // Update the links…
+        var link = vis.selectAll("path.link")
+            .data(tree.links(nodes), function(d) { return d.target.id; });
+
+        // Enter any new links at the parent's previous position.
+        link.enter().insert("svg:path", "g")
+            .attr("class", "link")
+            .attr("d", function(d) {
+              var o = {x: source.x0, y: source.y0};
+              return diagonal({source: o, target: o});
+            })
+          .transition()
+            .duration(duration)
+            .attr("d", diagonal);
+
+        // Transition links to their new position.
+        link.transition()
+            .duration(duration)
+            .attr("d", diagonal);
+
+        // Transition exiting nodes to the parent's new position.
+        link.exit().transition()
+            .duration(duration)
+            .attr("d", function(d) {
+              var o = {x: source.x, y: source.y};
+              return diagonal({source: o, target: o});
+            })
+            .remove();
+
+        // Stash the old positions for transition.
+        nodes.forEach(function(d) {
+          d.x0 = d.x;
+          d.y0 = d.y;
+        });
+      }
+
+      // Toggle children.
+      function toggle(d) {
+        if (!d) {
+          return;
+        }
+        if (d.children) {
+          d._children = d.children;
+          d.children = null;
+        } else {
+          d.children = d._children;
+          d._children = null;
+        }
+      }
     }
   });
 

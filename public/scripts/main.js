@@ -13,8 +13,10 @@ define('window', function () {
 
 
 require([
-  'clientGraph'
-], function (ClientGraph) {
+  'clientGraph',
+  'vendor/d3.v3',
+  'vendor/underscore'
+], function (ClientGraph, d3, _) {
   var graphModel = new ClientGraph.model();
   var graphView = new ClientGraph.view({
     model : graphModel,

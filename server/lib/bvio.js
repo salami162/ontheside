@@ -8,7 +8,6 @@ _.mixin(require('underscore.deferred'));
 function BVIO (client) {
   // Set up the base URL and the dictionary of reusable query parameters
   this.host = 'web-cdh4-bv-io-client-graph.mag.bazaarvoice.com:8080/api';
-  this.client = client || '*';
   this.paths = {
     clientGraph : '/graph/client',
     clientDashboard : '/client/dashboard/'
@@ -19,38 +18,80 @@ function BVIO (client) {
     stack : 'staging'
   };
 
+  this.urlFormats = {
+    clientGraph : 'http://%s%s?%s',
+    clientDashboard : 'http://%s%s%s?%s'
+  };
+
+  this.processFunc = {
+    clientGraph : processGraphData,
+    clientDashboard : processDashboardData
+  }
+
   this.headers = {
     'Content-Type' : 'application/json'
   };
 }
 
-BVIO.prototype.setFilters = function(filters) {
+BVIO.prototype.setFilterDates = function (timeFrame) {
+  this.filters = this.filters || {};
+  delete this.filters.timeFrame;
+
+  var currentDate = moment();
+  this.filters.end_date = currentDate.format('YYYYMMDD');
+
+  if (timeFrame === 'LAST_30_DAYS') {
+    this.filters.start_date = currentDate.subtract('days', 30).format('YYYYMMDD');
+  }
+  else if (timeFrame === 'LAST_7_DAYS') {
+    this.filters.start_date = currentDate.subtract('days', 7).format('YYYYMMDD');
+  }
+  else if (timeFrame === 'LAST_DAY') {
+    this.filters.start_date = currentDate.subtract('days', 1).format('YYYYMMDD');
+  }
+  return this;
+};
+
+BVIO.prototype.setFilters = function (filters) {
   this.filters = filters;
+  return this;
+};
+
+BVIO.prototype.setClient = function (name) {
+  this.client = name;
   return this;
 };
 
 BVIO.prototype._buildUrl = function (type) {
   var queryParams = _.extend({}, this.queryParams, this.filters);
-  return util.format( 'http://%s%s?%s',
+
+  var urlString = util.format( this.urlFormats[type],
     this.host,
-    this.paths[type],
-    querystring.stringify(queryParams)
+    this.paths[type]
   );
+
+  if (this.client) {
+    urlString = util.format( urlString, this.client, querystring.stringify(queryParams) );
+  }
+  else {
+    urlString = util.format( urlString, querystring.stringify(queryParams) );
+  }
+  return urlString;
 };
 
 BVIO.prototype.request = function (path) {
   var requestDfd = _.Deferred();
   var url = this._buildUrl(path);
-  console.log('bvio request url = ', url);
+  console.log(path, url);
   var self = this;
   request(url, function (error, response, body) {
-    requestDfd.resolve( processData(body) );
+    requestDfd.resolve( self.processFunc[path](body, self) );
   });
 
   return requestDfd.promise();
 };
 
-function processData (rawData) {
+function processGraphData (rawData, reference) {
   rawData = JSON.parse(rawData);
   var graphData = {
     nodes : [],
@@ -81,6 +122,57 @@ function processData (rawData) {
       };
     });
   return graphData;
+}
+
+function processDashboardData (rawData, reference) {
+  rawData = JSON.parse(rawData);
+  var dashboard = {
+    name : reference.client,
+    children : buildNode(rawData)
+  };
+  var size = 0;
+  _(dashboard.children).forEach(function (c) {
+    size = size + c.size;
+  });
+  dashboard.size = size;
+  dashboard.isRoot = true;
+
+  // console.log(dashboard);
+  return dashboard;
+}
+
+function buildNode (node) {
+  var array = [];
+  var isArray = _(node).isArray();
+
+  _(node).forEach(function (childNode, key) {
+    if (key !== 'total') {
+      var child = {
+        name : isArray ? childNode : key,
+        size : 0
+      };
+      if ( !_(childNode).isObject() ) {
+        if ( _(childNode).isNumber() ) {
+          child.size = isArray ? 1 : childNode;
+        }
+      }
+      else {
+        child.children = buildNode(childNode);
+        if (childNode.total) {
+          var total = childNode.total;
+          if ( _(total).isObject() ) {
+            total = total.total;
+          }
+          child.size = total;
+        }
+        else {
+          child.size = _(child.children).reduce(function (memo, value) {return memo + value.size;}, 0);
+        }
+      }
+      array.push(child);
+    }
+  });
+  return array;
 }
 
 module.exports = function (client) {
