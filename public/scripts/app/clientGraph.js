@@ -355,8 +355,8 @@ define([
 
         // Initialize the display to show a few nodes.
         data.children.forEach(toggleAll);
-        toggle(data.children[1]);
-        toggle(data.children[1].children[2]);
+        toggle(data.children[0]);
+        toggle(data.children[0].children[1]);
 
         update(data);
 
