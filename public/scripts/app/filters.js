@@ -33,7 +33,8 @@ define([
     name : 'filters',
 
     events: {
-      'click button#update-chart': 'updateChart'
+      'click button#update-chart' : 'updateChart',
+      'change input#find-client' : 'selectClient'
     },
 
     initialize : function (options) {
@@ -57,6 +58,11 @@ define([
       if ( !_(clients).isEmpty() ) {
         this.$('#find-client').typeahead({ source : clients });
       }
+    },
+
+    selectClient : function (e) {
+      var targetClient = e.target.value;
+
     }
 
   });

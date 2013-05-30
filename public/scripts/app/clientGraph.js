@@ -10,7 +10,7 @@ define([
 
     initialize : function (attrs, options) {
       Global.Model.prototype.initialize.apply(this, arguments);
-      this.listenTo(this.get('filters'), 'fetchClientGraph', this.fetchClientGraph);
+      this.listenTo(this.get('filtersModel'), 'fetchClientGraph', this.fetchClientGraph);
     },
 
     fetchClientGraph : function (filters) {
@@ -28,7 +28,7 @@ define([
       fetchRequest.done(function (data) {
         self.set(data);
         if (data && data.clients) {
-          self.get('filters').trigger('updateClients', data.clients);
+          self.get('filtersModel').trigger('updateClients', data.clients);
         }
         console.log(data);
         self.trigger('drawClientGraph', data);

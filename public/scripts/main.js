@@ -34,7 +34,7 @@ require([
   });
 
   var graphModel = new ClientGraph.model({
-    filters : filtersModel
+    filtersModel : filtersModel
   });
   var graphView = new ClientGraph.view({
     model : graphModel,
