@@ -14,9 +14,12 @@ define([
       this.listenTo(Global.Bus, 'fetchClientCenterGraph', this.fetchClientCenterGraph);
     },
 
-    fetchClientGraph : function (filters) {
+    fetchClientGraph : function (filtersModel) {
       var self = this;
-      this.setFilters(filters);
+      this.setFilters({
+        timeFrame : filtersModel.timeFrame,
+        minWeight : filtersModel.minWeight
+      });
 
       var fetchRequest = $.ajax({
         url : this.url('clientGraph'),
