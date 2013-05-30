@@ -17,6 +17,9 @@
  * limitations under the License.
  * ========================================================== */
 
+define([
+  'vendor/jquery'
+], function ($) {
 
 !function ($) {
 
@@ -58,7 +61,7 @@
 
   })
 
-}(window.jQuery);/* ==========================================================
+}($);/* ==========================================================
  * bootstrap-alert.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#alerts
  * ==========================================================
@@ -147,7 +150,7 @@
     $('body').on('click.alert.data-api', dismiss, Alert.prototype.close)
   })
 
-}(window.jQuery);/* ============================================================
+}($);/* ============================================================
  * bootstrap-button.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#buttons
  * ============================================================
@@ -242,7 +245,7 @@
     })
   })
 
-}(window.jQuery);/* ==========================================================
+}($);/* ==========================================================
  * bootstrap-carousel.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#carousel
  * ==========================================================
@@ -410,7 +413,7 @@
     })
   })
 
-}(window.jQuery);/* =============================================================
+}($);/* =============================================================
  * bootstrap-collapse.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#collapse
  * =============================================================
@@ -566,7 +569,7 @@
     })
   })
 
-}(window.jQuery);/* ============================================================
+}($);/* ============================================================
  * bootstrap-dropdown.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#dropdowns
  * ============================================================
@@ -665,7 +668,7 @@
       .on('click.dropdown.data-api', toggle, Dropdown.prototype.toggle)
   })
 
-}(window.jQuery);/* =========================================================
+}($);/* =========================================================
  * bootstrap-modal.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#modals
  * =========================================================
@@ -882,7 +885,7 @@
     })
   })
 
-}(window.jQuery);/* ===========================================================
+}($);/* ===========================================================
  * bootstrap-tooltip.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#tooltips
  * Inspired by the original jQuery.tipsy by Jason Frame
@@ -1156,7 +1159,7 @@
   , delay: 0
   }
 
-}(window.jQuery);
+}($);
 /* ===========================================================
  * bootstrap-popover.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#popovers
@@ -1254,7 +1257,7 @@
   , template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
   })
 
-}(window.jQuery);/* =============================================================
+}($);/* =============================================================
  * bootstrap-scrollspy.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#scrollspy
  * =============================================================
@@ -1404,7 +1407,7 @@
     })
   })
 
-}(window.jQuery);/* ========================================================
+}($);/* ========================================================
  * bootstrap-tab.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#tabs
  * ========================================================
@@ -1538,7 +1541,7 @@
     })
   })
 
-}(window.jQuery);/* =============================================================
+}($);/* =============================================================
  * bootstrap-typeahead.js v2.0.4
  * http://twitter.github.com/bootstrap/javascript.html#typeahead
  * =============================================================
@@ -1822,4 +1825,7 @@
     })
   })
 
-}(window.jQuery);
+}($);
+
+return $;
+});

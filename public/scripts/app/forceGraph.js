@@ -4,14 +4,16 @@ define([
 ], function (_, d3) {
 
   function forceGraph (selector, width, height, view) {
-    this.width = width || 800;
-    this.height = height || 600;
+    this.margin = [20, 20, 20, 20];
+    this.r = 10;
+    this.width = (width - this.margin[1] - this.margin[3]) || 800;
+    this.height = (height - this.margin[0] - this.margin[2]) || 600;
     this.svgChart = d3.select(selector)
                       .attr('width', this.width)
                       .attr('height', this.height);
     this.force = d3.layout.force()
       .gravity(0.05)
-      .charge(-500)
+      .charge(-150)
       .size([this.width, this.height]);
     this.responseView = view;
     return this;
@@ -94,23 +96,33 @@ define([
   };
 
   forceGraph.prototype._onTick = function () {
+    var self = this;
     var link = this.svgChart.selectAll('.link');
     var node = this.svgChart.selectAll('.node');
     // draw directed edges with proper padding from node centers
     link.attr('d', function(d) {
-      var deltaX = d.target.x - d.source.x,
-          deltaY = d.target.y - d.source.y,
+      var dsourcex = Math.min( self.width, Math.max(0, d.source.x) );
+      var dsourcey = Math.min( self.width, Math.max(0, d.source.y) );
+      var dtargetx = Math.min( self.width, Math.max(0, d.target.x) );
+      var dtargety = Math.min( self.width, Math.max(0, d.target.y) );
+
+      var deltaX = dtargetx - dsourcex,
+          deltaY = dtargety - dsourcey,
           dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
           normX = deltaX / dist,
           normY = deltaY / dist,
           sourcePadding = d.left ? 17 : 12,
           targetPadding = d.right ? 17 : 12,
-          sourceX = d.source.x + (sourcePadding * normX),
-          sourceY = d.source.y + (sourcePadding * normY),
-          targetX = d.target.x - (targetPadding * normX),
-          targetY = d.target.y - (targetPadding * normY);
+          sourceX = dsourcex + (sourcePadding * normX),
+          sourceY = dsourcey + (sourcePadding * normY),
+          targetX = dtargetx - (targetPadding * normX),
+          targetY = dtargety - (targetPadding * normY);
+
       return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
     });
+
+    node.attr("cx", function(d) { return d.x = Math.max(self.r, Math.min(self.width - self.r, d.x)); })
+        .attr("cy", function(d) { return d.y = Math.max(self.r, Math.min(self.height - self.r, d.y)); });
 
     node.attr('transform', function(d) {
       return 'translate(' + d.x + ',' + d.y + ')';
@@ -123,7 +135,7 @@ define([
     var longestPath = _(data.links).max(function (path) {
       return path.value;
     });
-    var ratio = 300 / longestPath.value;
+    var ratio = 750 / longestPath.value;
 
     this.force
         .distance(function (d) {
@@ -167,11 +179,11 @@ define([
         .on( 'mouseout', _.bind(this._removeDisplay, this) )
         .on( 'mousedown', this._addSticky)
         .on( 'dblclick', function (d) {
-          self.responseView.model.trigger('fetchClientDashboard', d.name);
+          self.responseView.trigger('fetchDashboard', d.name);
         });
 
     node.append('circle')
-      .attr('r', 10);
+      .attr('r', this.r);
 
     node.append('text')
         .attr('dx', 16)

@@ -68,3 +68,33 @@ circle.parent:hover {
 circle.child {
   pointer-events: none;
 }
+
+div.loading-overlay {
+  opacity: 0.4;
+  background: #000;
+  z-index: 2000008020;
+  height: 100%;
+  position: fixed;
+}
+
+div#loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -22px;
+  margin-left: -22px;
+  background-position: 0 -108px;
+  opacity: 0.8;
+  cursor: pointer;
+  z-index: 2000008030;
+}
+
+.loading-spinner {
+  width: 44px;
+  height: 44px;
+  background: url('../images/loading.gif') center center no-repeat;
+}
+
+.client-dashboard .modal-footer .graph-choice {
+  float: left;
+}

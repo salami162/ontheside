@@ -137,8 +137,10 @@ function processDashboardData (rawData, reference) {
   dashboard.size = size;
   dashboard.isRoot = true;
 
-  // console.log(dashboard);
-  return dashboard;
+  return {
+    graph : dashboard,
+    raw : rawData
+  };
 }
 
 function buildNode (node) {

@@ -17,3 +17,17 @@ block content
 
     div.client-graph-chart
       svg.chart
+
+    div.client-dashboard
+      div#dashboard.client-dashboard.modal.hide.fade(role='dialog', aria-hidden='true')
+        div.modal-body
+        div.modal-footer
+          div.btn-group.graph-choice
+            button.btn.btn-primary.dropdown-toggle(data-toggle='dropdown',type='button') Detail List
+              span.caret
+            ul.dropdown-menu
+              li
+                a.detail-list(href='#') Detail List
+                a.tree-chart(href='#') Tree Graph
+                a.center-chart(href='#') Centered Graph
+          button#close-dashboard.btn(type='button') Close
