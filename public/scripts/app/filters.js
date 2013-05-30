@@ -62,7 +62,9 @@ define([
 
     selectClient : function (e) {
       var targetClient = e.target.value;
-
+      this.model.set('targetClient', targetClient);
+      Loading.show();
+      Global.Bus.trigger( 'fetchClientCenterGraph', targetClient, this.model.toJSON() );
     }
 
   });

@@ -12,7 +12,7 @@ exports.clientGraph = function (req, res) {
   BVIO()
     .setFilters({
       timeFrame : req.query.timeFrame || 'LAST_30_DAYS',
-      minWeight : req.query.minWeight || 30
+      minWeight : req.query.minWeight || 50000
     })
     .request('clientGraph')
       .done(function (data) {
@@ -57,7 +57,7 @@ exports.clientCenterGraph = function (req, res) {
     .setClient(req.query.client)
     .setFilters({
       timeFrame : req.query.timeFrame || 'LAST_30_DAYS',
-      minWeight : (req.query.minWeight - 10) || 20
+      minWeight : (req.query.minWeight * 0.8) || 40000
     })
     .request('clientCenterGraph')
       .done(function (data) {

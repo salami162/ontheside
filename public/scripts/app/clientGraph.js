@@ -11,6 +11,7 @@ define([
     initialize : function (attrs, options) {
       Global.Model.prototype.initialize.apply(this, arguments);
       this.listenTo(this.get('filtersModel'), 'fetchClientGraph', this.fetchClientGraph);
+      this.listenTo(Global.Bus, 'fetchClientCenterGraph', this.fetchClientCenterGraph);
     },
 
     fetchClientGraph : function (filters) {
@@ -36,6 +37,26 @@ define([
       .fail(function (error) {
         self.trigger('showError', error);
       });
+    },
+
+    fetchClientCenterGraph : function (client, filters) {
+      var self = this;
+      this.setFilters( _.extend({}, _(filters).pick('timeFrame', 'targetClient', 'minWeight'), { client : client }) );
+
+      var fetchRequest = $.ajax({
+        url : this.url('clientCenterGraph'),
+        dataType : 'jsonp',
+        async : true,
+        cache : false,
+        timeout : 20000
+      });
+
+      fetchRequest.done(function (data) {
+        self.trigger('drawClientCenterGraph', data);
+      })
+      .fail(function (error) {
+        self.trigger('showError', error);
+      });
     }
   });
 
@@ -48,6 +69,7 @@ define([
       Global.View.prototype.initialize.apply(this, arguments);
       this.listenTo(this.model, 'drawClientGraph', this.drawClientGraph);
       this.listenTo(this, 'fetchDashboard', this.fetchDashboard);
+      this.listenTo(this.model, 'drawClientCenterGraph', this.drawClientCenterGraph);
     },
 
     drawClientGraph : function (data) {
@@ -62,6 +84,20 @@ define([
     fetchDashboard : function (client) {
       Loading.show();
       Global.Bus.trigger( 'fetchClientDashboard', client, this.model.get('filters') );
+    },
+
+    drawClientCenterGraph : function (data) {
+      var filters = this.model.get('filters');
+      var targetClient = filters ? (filters.targetClient || '*') : '*';
+      this.$('#chart-tabs').append('<li><a href="#' + targetClient + '" data-toggle="tab" class="' + targetClient + '">' + targetClient + '</a></li>');
+      this.$('.tab-content').append('<div id="' + targetClient + '" class="tab-pane"><svg class="chart"></svg></div>');
+
+      Loading.hide();
+
+      var selector = 'div#' + targetClient + ' svg.chart'
+      var treeGraph = new ForceGraph( selector, this.width, this.height, this );
+      treeGraph.draw(data);
+      this.$('#chart-tabs a.' + targetClient).tab('show');
     }
   });
 

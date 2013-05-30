@@ -14,7 +14,6 @@ define([
     initialize : function (attrs, options) {
       Global.Model.prototype.initialize.apply(this, arguments);
       this.listenTo(Global.Bus, 'fetchClientDashboard', this.fetchClientDashboard);
-      this.listenTo(this, 'fetchClientCenterGraph', this.fetchClientCenterGraph);
     },
 
     fetchClientDashboard : function (client, filters) {
@@ -36,26 +35,8 @@ define([
       .fail(function (error) {
         self.trigger('showError', error);
       });
-    },
-
-    fetchClientCenterGraph : function () {
-      var self = this;
-
-      var fetchRequest = $.ajax({
-        url : this.url('clientCenterGraph'),
-        dataType : 'jsonp',
-        async : true,
-        cache : false,
-        timeout : 20000
-      });
-
-      fetchRequest.done(function (data) {
-        self.trigger('drawClientCenterGraph', data);
-      })
-      .fail(function (error) {
-        self.trigger('showError', error);
-      });
     }
+
   });
 
   var dashboardView = Global.View.extend({
@@ -71,7 +52,6 @@ define([
     initialize : function (options) {
       Global.View.prototype.initialize.apply(this, arguments);
       this.listenTo(this.model, 'showDashboard', this.showDashboard);
-      this.listenTo(this.model, 'drawClientCenterGraph', this.drawClientCenterGraph);
     },
 
     showDashboard : function () {
@@ -120,20 +100,8 @@ define([
     fetchCenteredChart : function (e) {
       Loading.show();
       this.model.trigger('fetchClientCenterGraph');
-    },
-
-    drawClientCenterGraph : function (data) {
-      Loading.hide();
-      this.$('.modal-body').html('<svg class="center-chart"></svg>');
-      var treeGraph = new ForceGraph( 'svg.center-chart', 1000, 800 );
-      treeGraph.draw(data);
-      this.resize();
-    },
-
-    resize : function () {
-      this.$el.css('width', 'auto');
-      this.$('.modal-body').css('max-height', '800px');
     }
+
   });
 
   return {
