@@ -70,7 +70,7 @@ define([
 
     fetchDashboard : function (client) {
       Loading.show();
-      Global.Bus.trigger('fetchClientDashboard', client);
+      Global.Bus.trigger( 'fetchClientDashboard', client, this.model.get('filters') );
     }
   });
 

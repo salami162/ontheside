@@ -10,7 +10,8 @@ function BVIO (client) {
   this.host = 'web-cdh4-bv-io-client-graph.mag.bazaarvoice.com:8080/api';
   this.paths = {
     clientGraph : '/graph/client',
-    clientDashboard : '/client/dashboard/'
+    clientDashboard : '/client/dashboard/',
+    clientCenterGraph : '/graph/client/'
   };
 
   this.queryParams = {
@@ -20,13 +21,15 @@ function BVIO (client) {
 
   this.urlFormats = {
     clientGraph : 'http://%s%s?%s',
-    clientDashboard : 'http://%s%s%s?%s'
+    clientDashboard : 'http://%s%s%s?%s',
+    clientCenterGraph : 'http://%s%s%s?%s'
   };
 
   this.processFunc = {
     clientGraph : processGraphData,
-    clientDashboard : processDashboardData
-  }
+    clientDashboard : processDashboardData,
+    clientCenterGraph : processGraphData
+  };
 
   this.headers = {
     'Content-Type' : 'application/json'

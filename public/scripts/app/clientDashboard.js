@@ -12,15 +12,14 @@ define([
     name : 'dashboard',
 
     initialize : function (attrs, options) {
-      this.set({
-        baseUrl : 'http://localhost:3000'
-      });
+      Global.Model.prototype.initialize.apply(this, arguments);
       this.listenTo(Global.Bus, 'fetchClientDashboard', this.fetchClientDashboard);
+      this.listenTo(this, 'fetchClientCenterGraph', this.fetchClientCenterGraph);
     },
 
-    fetchClientDashboard : function (client) {
+    fetchClientDashboard : function (client, filters) {
       var self = this;
-      this.setFilters({ client : client });
+      this.setFilters( _.extend({}, filters, { client : client }) );
 
       var fetchRequest = $.ajax({
         url : this.url('clientDashboard'),
@@ -37,6 +36,25 @@ define([
       .fail(function (error) {
         self.trigger('showError', error);
       });
+    },
+
+    fetchClientCenterGraph : function () {
+      var self = this;
+
+      var fetchRequest = $.ajax({
+        url : this.url('clientCenterGraph'),
+        dataType : 'jsonp',
+        async : true,
+        cache : false,
+        timeout : 20000
+      });
+
+      fetchRequest.done(function (data) {
+        self.trigger('drawClientCenterGraph', data);
+      })
+      .fail(function (error) {
+        self.trigger('showError', error);
+      });
     }
   });
 
@@ -46,13 +64,14 @@ define([
     events: {
       'click a.detail-list' : 'showDashboard',
       'click a.tree-chart' : 'drawTreeChart',
-      'click a.centered-chart' : 'drawCenteredChart',
+      'click a.center-chart' : 'fetchCenteredChart',
       'click button#close-dashboard' : 'hideDashboard'
     },
 
     initialize : function (options) {
       Global.View.prototype.initialize.apply(this, arguments);
       this.listenTo(this.model, 'showDashboard', this.showDashboard);
+      this.listenTo(this.model, 'drawClientCenterGraph', this.drawClientCenterGraph);
     },
 
     showDashboard : function () {
@@ -98,8 +117,17 @@ define([
       this.resize();
     },
 
-    drawCenteredChart : function (e) {
+    fetchCenteredChart : function (e) {
+      Loading.show();
+      this.model.trigger('fetchClientCenterGraph');
+    },
 
+    drawClientCenterGraph : function (data) {
+      Loading.hide();
+      this.$('.modal-body').html('<svg class="center-chart"></svg>');
+      var treeGraph = new ForceGraph( 'svg.center-chart', 1000, 800 );
+      treeGraph.draw(data);
+      this.resize();
     },
 
     resize : function () {
