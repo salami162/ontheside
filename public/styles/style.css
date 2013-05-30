@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 100px 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -7,19 +7,37 @@ a {
   color: #00B7FF;
 }
 
+.navbar .brand {
+  font-size: 50px;
+  color: #fff;
+  background-color: #1b1b1b;
+}
+
+.navbar .nav-collapse {
+  float: right;
+}
+
+.navbar ul.nav li {
+  line-height: 80px;
+  margin: 0 10px;
+}
+
+.navbar ul.nav li button, input, select {
+  margin: 0 0 10px 10px;
+}
+
+.navbar ul.nav li select {
+  width: 120px;
+}
+
 .node text {
   pointer-events: none;
 }
 
 .node circle {
-  fill: #ff7f0e;
   stroke: steelblue;
   pointer-events: all;
   stroke-width: 1.5px;
-}
-
-.node circle.sticky {
-  fill: #f00;
 }
 
 .link {
@@ -48,11 +66,6 @@ text.parent {
   fill: #1f77b4;
 }
 
-circle {
-  fill: #ccc;
-  stroke: #999;
-  pointer-events: all;
-}
 
 circle.parent {
   fill: #1f77b4;

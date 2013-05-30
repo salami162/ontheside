@@ -9,14 +9,14 @@ function BVIO (client) {
   // Set up the base URL and the dictionary of reusable query parameters
   this.host = 'web-cdh4-bv-io-client-graph.mag.bazaarvoice.com:8080/api';
   this.paths = {
-    clientGraph : '/graph/client',
+    clientGraph : '/graph/enhanced/client',
     clientDashboard : '/client/dashboard/',
     clientCenterGraph : '/graph/client/'
   };
 
   this.queryParams = {
     passkey : 'e7da1235-02e6-4a77-b0f8-a0444f278aab',
-    stack : 'staging'
+    stack : 'production'
   };
 
   this.urlFormats = {
@@ -110,7 +110,8 @@ function processGraphData (rawData, reference) {
     })
     .map(function (vertex) {
       return {
-        name : vertex.name
+        name : vertex.name,
+        group : vertex.networkCookie ? 0 : 1
       };
     }).value();
 

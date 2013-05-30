@@ -109,15 +109,14 @@ define([
       var deltaX = dtargetx - dsourcex,
           deltaY = dtargety - dsourcey,
           dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-          normX = deltaX / dist,
-          normY = deltaY / dist,
+          normX = dist === 0 ? 0 : deltaX / dist,
+          normY = dist === 0 ? 0 : deltaY / dist,
           sourcePadding = d.left ? 17 : 12,
           targetPadding = d.right ? 17 : 12,
           sourceX = dsourcex + (sourcePadding * normX),
           sourceY = dsourcey + (sourcePadding * normY),
           targetX = dtargetx - (targetPadding * normX),
           targetY = dtargety - (targetPadding * normY);
-
       return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
     });
 
@@ -135,8 +134,9 @@ define([
     var longestPath = _(data.links).max(function (path) {
       return path.value;
     });
-    var ratio = 750 / longestPath.value;
-
+    var dimension = Math.max(this.width, this.height);
+    var ratio = dimension / longestPath.value;
+    var color = ['#00CC00', '#ff7f0e'];
     this.force
         .distance(function (d) {
           return d.value * ratio;
@@ -147,7 +147,7 @@ define([
         .links(data.links)
         .start();
 
-    this._createMarkers();
+    // this._createMarkers();
 
     var link = this.svgChart.selectAll('.link')
         .data(data.links)
@@ -159,7 +159,7 @@ define([
           return d.source.name + '_' + d.target.name + '_' + d.value;
         })
         .style("stroke-width", function(d) {
-          return (d.value / 20);
+          return Math.ceil( (d.value / longestPath) * 10 );
         })
         .style('marker-start', function(d) {
           return d.left ? 'url(#start-arrow)' : '';
@@ -183,7 +183,10 @@ define([
         });
 
     node.append('circle')
-      .attr('r', this.r);
+      .attr('r', this.r)
+      .style('fill', function (d) {
+        return color[d.group];
+      })
 
     node.append('text')
         .attr('dx', 16)
