@@ -18,7 +18,7 @@ html
             ul.nav
               li
                 span.find-client-label Find Client:
-                input#find-client.input-small(name='clientName', type='text', placeholder='walmart')
+                input#find-client.input-small.typeahead(name='targetClient', type='text', placeholder='walmart', data-provide='typeahead')
               li
                 span.time-frame-label Time Frame:
                 select#time-frame(name='timeFrame')

@@ -14,8 +14,6 @@ define([
     },
 
     fetchClientGraph : function (filters) {
-      console.log(filters);
-
       var self = this;
       this.setFilters(filters);
 
@@ -29,6 +27,9 @@ define([
 
       fetchRequest.done(function (data) {
         self.set(data);
+        if (data && data.clients) {
+          self.get('filters').trigger('updateClients', data.clients);
+        }
         console.log(data);
         self.trigger('drawClientGraph', data);
       })

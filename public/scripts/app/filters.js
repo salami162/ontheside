@@ -15,11 +15,17 @@ define([
         minWeight : 50000
       });
       this.listenTo(this, 'updateFilters', this.updateFilters);
+      this.listenTo(this, 'updateClients', this.updateClients);
     },
 
     updateFilters : function (filters) {
       this.set(filters);
       this.trigger( 'fetchClientGraph', this.toJSON() );
+    },
+
+    updateClients : function (clients) {
+      this.set('clients', clients);
+      this.trigger('populateClients');
     }
   });
 
@@ -32,6 +38,7 @@ define([
 
     initialize : function (options) {
       Global.View.prototype.initialize.apply(this, arguments);
+      this.listenTo(this.model, 'populateClients', this.populateClients);
     },
 
     updateChart : function (e) {
@@ -43,6 +50,13 @@ define([
       };
       Loading.show();
       this.model.trigger('updateFilters', filters);
+    },
+
+    populateClients : function () {
+      var clients = this.model.get('clients');
+      if ( !_(clients).isEmpty() ) {
+        this.$('#find-client').typeahead({ source : clients });
+      }
     }
 
   });

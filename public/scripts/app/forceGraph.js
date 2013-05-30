@@ -61,7 +61,7 @@ define([
 
     this.svgChart.select('text.' + d.name)
       .classed('highlight', true)
-      .attr('dx', (this.r * 5) / 2)
+      .attr('dx', (0 - (this.r * 5) / 2))
       .attr('dy', '-0.95em');
 
     var links = this.svgChart.selectAll('path.link.' + d.name)

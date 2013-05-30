@@ -125,6 +125,11 @@ function processGraphData (rawData, reference) {
         right : true
       };
     });
+
+  graphData.clients = _(vertices)
+    .map(function (vertex) {
+      return vertex.name;
+    }).sort();
   return graphData;
 }
 
