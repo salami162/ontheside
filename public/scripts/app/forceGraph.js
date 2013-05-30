@@ -54,30 +54,50 @@ define([
 
   forceGraph.prototype._displayWeight = function (d) {
     var self = this;
+    this.svgChart.select('circle.' + d.name)
+      .transition()
+      .duration(100)
+      .attr('r', this.r * 2.5);
+
+    this.svgChart.select('text.' + d.name)
+      .classed('highlight', true)
+      .attr('dx', (this.r * 5) / 2)
+      .attr('dy', '-0.95em');
+
     var links = this.svgChart.selectAll('path.link.' + d.name)
       .classed('highlight', true);
 
-    _(links[0]).forEach(function(slink) {
-      var pathText = self.svgChart.append("text")
-        .attr('class','link_text')
-        .attr('x', 20)
-        .attr('dy', 25);
+    // _(links[0]).forEach(function(slink) {
+    //   var pathText = self.svgChart.append("text")
+    //     .attr('class','link_text')
+    //     .attr('x', 20)
+    //     .attr('dy', 25);
 
-      pathText.append('textPath')
-        .attr('xlink:href', function() {
-          return '#' + slink.id;
-        })
-        .attr('class','text_path')
-        .style('fill','#000')
-        .text(function(text, i) {
-          var ids = slink.id.split('_');
-          return ids.pop();
-        });
-    });
+    //   pathText.append('textPath')
+    //     .attr('xlink:href', function() {
+    //       return '#' + slink.id;
+    //     })
+    //     .attr('class','text_path')
+    //     .style('fill','#000')
+    //     .text(function(text, i) {
+    //       var ids = slink.id.split('_');
+    //       return ids.pop();
+    //     });
+    // });
     return this;
   };
 
   forceGraph.prototype._removeDisplay = function (d) {
+    this.svgChart.select('circle.' + d.name)
+      .transition()
+      .duration(100)
+      .attr('r', this.r)
+      .attr('dy', '0.95em');
+
+    this.svgChart.select('text.' + d.name)
+      .classed('highlight', false)
+      .attr('dx', 16);
+
     this.svgChart
       .selectAll('path.link.' + d.name)
       .classed('highlight', false);
@@ -113,10 +133,10 @@ define([
           normY = dist === 0 ? 0 : deltaY / dist,
           sourcePadding = d.left ? 17 : 12,
           targetPadding = d.right ? 17 : 12,
-          sourceX = dsourcex + (sourcePadding * normX),
-          sourceY = dsourcey + (sourcePadding * normY),
-          targetX = dtargetx - (targetPadding * normX),
-          targetY = dtargety - (targetPadding * normY);
+          sourceX = dsourcex,// + (sourcePadding * normX),
+          sourceY = dsourcey,// + (sourcePadding * normY),
+          targetX = dtargetx,// - (targetPadding * normX),
+          targetY = dtargety;// - (targetPadding * normY);
       return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
     });
 
@@ -183,15 +203,21 @@ define([
         });
 
     node.append('circle')
+      .attr('class', function (d) {
+        return d.name;
+      })
       .attr('r', this.r)
       .style('fill', function (d) {
         return color[d.group];
       })
 
     node.append('text')
-        .attr('dx', 16)
-        .attr('dy', '.95em')
-        .text(function(d) { return d.name; });
+      .attr('class', function (d) {
+        return d.name;
+      })
+      .attr('dx', 16)
+      .attr('dy', '.95em')
+      .text(function(d) { return d.name; });
 
     this.force.on( 'tick', _.bind(this._onTick, this) );
   };
