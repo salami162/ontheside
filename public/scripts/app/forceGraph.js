@@ -151,11 +151,11 @@ define([
 
   forceGraph.prototype.draw = function (data) {
     var self = this;
-    var longestPath = _(data.links).max(function (path) {
+    var thickestLink = _(data.links).max(function (path) {
       return path.value;
     });
     var dimension = Math.max(this.width, this.height);
-    var ratio = dimension / longestPath.value;
+    var ratio = dimension / thickestLink.value;
     var color = ['#00CC00', '#ff7f0e'];
     this.force
         .distance(function (d) {
@@ -179,7 +179,7 @@ define([
           return d.source.name + '_' + d.target.name + '_' + d.value;
         })
         .style("stroke-width", function(d) {
-          return Math.ceil( (d.value / longestPath) * 10 );
+          return Math.ceil( (d.value / thickestLink.value) * 10 );
         })
         .style('marker-start', function(d) {
           return d.left ? 'url(#start-arrow)' : '';
