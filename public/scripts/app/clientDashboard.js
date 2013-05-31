@@ -18,7 +18,7 @@ define([
 
     fetchClientDashboard : function (client, filters) {
       var self = this;
-      this.setFilters( _.extend({}, filters, { client : client }) );
+      this.setFilters( _.extend({}, filters, { targetClient : client }) );
 
       var fetchRequest = $.ajax({
         url : this.url('clientDashboard'),

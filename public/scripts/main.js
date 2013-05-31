@@ -20,13 +20,14 @@ require([
   'vendor/d3.v3',
   'vendor/underscore'
 ], function (
-  GlobalBus,
+  Global,
   Filters,
   ClientGraph,
   ClientDashboard,
   d3,
   _
 ) {
+  Global.Bus.set('graphType', 'network');
   var filtersModel = new Filters.model();
   var filtersView = new Filters.view({
     model : filtersModel,

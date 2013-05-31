@@ -26,14 +26,14 @@ exports.clientGraph = function (req, res) {
 };
 
 exports.clientDashboard = function (req, res) {
-  if ( !req.query.client ) {
+  if ( !req.query.targetClient ) {
     return res.jsonp(500, {
       error : 'Client Name is required.'
     });
   }
 
   BVIO()
-    .setClient(req.query.client)
+    .setClient(req.query.targetClient)
     .setFilterDates(req.query.timeFrame || 'LAST_30_DAYS')
     .request('clientDashboard')
       .done(function (data) {
@@ -47,17 +47,17 @@ exports.clientDashboard = function (req, res) {
 };
 
 exports.clientCenterGraph = function (req, res) {
-  if ( !req.query.client ) {
+  if ( !req.query.targetClient ) {
     return res.jsonp(500, {
       error : 'Client Name is required.'
     });
   }
 
   BVIO()
-    .setClient(req.query.client)
+    .setClient(req.query.targetClient)
     .setFilters({
       timeFrame : req.query.timeFrame || 'LAST_30_DAYS',
-      minWeight : (req.query.minWeight * 0.8) || 40000
+      minWeight : req.query.minWeight || 50000
     })
     .request('clientCenterGraph')
       .done(function (data) {

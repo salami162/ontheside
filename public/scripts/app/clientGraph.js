@@ -10,11 +10,16 @@ define([
 
     initialize : function (attrs, options) {
       Global.Model.prototype.initialize.apply(this, arguments);
-      this.listenTo(this.get('filtersModel'), 'fetchClientGraph', this.fetchClientGraph);
+      this.listenTo(this.get('filtersModel'), 'fetchGraph', this.fetchGraph);
       this.listenTo(Global.Bus, 'fetchClientCenterGraph', this.fetchClientCenterGraph);
     },
 
-    fetchClientGraph : function (filtersModel) {
+    fetchGraph : function (filtersModel) {
+      var type = Global.Bus.get('graphType');
+      this['fetch' + type[0].toUpperCase() + type.slice(1) + 'Graph'](filtersModel);
+    },
+
+    fetchNetworkGraph : function (filtersModel) {
       var self = this;
       this.setFilters({
         timeFrame : filtersModel.timeFrame,
@@ -42,9 +47,9 @@ define([
       });
     },
 
-    fetchClientCenterGraph : function (client, filters) {
+    fetchClientCenterGraph : function (filters) {
       var self = this;
-      this.setFilters( _.extend({}, _(filters).pick('timeFrame', 'targetClient', 'minWeight'), { client : client }) );
+      this.setFilters( _.extend({}, _(filters).pick('timeFrame', 'targetClient', 'minWeight')) );
 
       var fetchRequest = $.ajax({
         url : this.url('clientCenterGraph'),
@@ -68,11 +73,21 @@ define([
     width : 960,
     height : 660,
 
+    events : {
+      'click #chart-tabs li a' : 'switchTab'
+    },
+
     initialize : function (options) {
       Global.View.prototype.initialize.apply(this, arguments);
       this.listenTo(this.model, 'drawClientGraph', this.drawClientGraph);
       this.listenTo(this, 'fetchDashboard', this.fetchDashboard);
       this.listenTo(this.model, 'drawClientCenterGraph', this.drawClientCenterGraph);
+    },
+
+    switchTab : function (e) {
+      var tabName = $(e.target).text().toLowerCase();
+      Global.Bus.set('graphType', tabName === 'network' ? tabName : 'clientCenter');
+      Global.Bus.trigger('switchTab', tabName);
     },
 
     drawClientGraph : function (data) {
@@ -90,17 +105,26 @@ define([
     },
 
     drawClientCenterGraph : function (data) {
+      Global.Bus.set('graphType', 'clientCenter');
       var filters = this.model.get('filters');
       var targetClient = filters ? (filters.targetClient || '*') : '*';
-      this.$('#chart-tabs').append('<li><a href="#' + targetClient + '" data-toggle="tab" class="' + targetClient + '">' + targetClient + '</a></li>');
-      this.$('.tab-content').append('<div id="' + targetClient + '" class="tab-pane"><svg class="chart"></svg></div>');
+      var selector = 'div#' + targetClient + ' svg.chart';
+      var existTab = this.$('#chart-tabs').find('a.' + targetClient);
 
-      Loading.hide();
+      if (existTab.length === 0) {
+        this.$('#chart-tabs').append('<li><a href="#' + targetClient + '" data-toggle="tab" class="' + targetClient + '">' + targetClient + '</a></li>');
+        this.$('.tab-content').append('<div id="' + targetClient + '" class="tab-pane"><svg class="chart"></svg></div>');
+      }
+      else {
+        this.$('.tab-content').find(selector).empty();
+      }
 
-      var selector = 'div#' + targetClient + ' svg.chart'
+      this.$('#chart-tabs a.' + targetClient).tab('show');
+
       var treeGraph = new ForceGraph( selector, this.width, this.height, this );
       treeGraph.draw(data);
-      this.$('#chart-tabs a.' + targetClient).tab('show');
+
+      Loading.hide();
     }
   });
 

@@ -8,7 +8,6 @@ define([
     };
   }
 
-
   var clientModel = Backbone.Model.extend({
     name : 'clientModel',
 

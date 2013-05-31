@@ -4,13 +4,14 @@ define([
 ], function (_, $) {
 
   var $loading = $('<div id="loading-overlay-id" class="loading-overlay"/></div><div title="loading" id="loading" role="alert"><div class="loading-spinner"/></div>');
+  var $overlay = $('<div class="overlay fade in"></div>')
   var hideLoadingDelay;
 
   var LoadingOverlay = {
     show : function (sticky) {
       this._clear();
-
       $loading.appendTo('body');
+      $overlay.appendTo('body');
 
       if (!sticky) {
         // Hide the loading if it's not hidden in 20s
@@ -20,6 +21,7 @@ define([
 
     hide : function () {
       this._clear();
+      $overlay.remove();
       $loading.remove();
     },
 

@@ -20,13 +20,14 @@ define([
 
     updateFilters : function (filters) {
       this.set(filters);
-      this.trigger( 'fetchClientGraph', this.toJSON() );
+      this.trigger( 'fetchGraph', this.toJSON() );
     },
 
     updateClients : function (clients) {
       this.set('clients', clients);
       this.trigger('populateClients');
     }
+
   });
 
   var filtersView = Global.View.extend({
@@ -40,6 +41,7 @@ define([
     initialize : function (options) {
       Global.View.prototype.initialize.apply(this, arguments);
       this.listenTo(this.model, 'populateClients', this.populateClients);
+      this.listenTo(Global.Bus, 'switchTab', this.updateTargetClient);
     },
 
     updateChart : function (e) {
@@ -64,9 +66,17 @@ define([
       var targetClient = e.target.value;
       this.model.set('targetClient', targetClient);
       Loading.show();
-      Global.Bus.trigger( 'fetchClientCenterGraph', targetClient, this.model.toJSON() );
-    }
+      Global.Bus.trigger( 'fetchClientCenterGraph', this.model.toJSON() );
+    },
 
+    updateTargetClient : function (clientName) {
+      if (clientName === 'network') {
+        this.$('input#find-client').val('');
+      }
+      else {
+        this.$('input#find-client').val(clientName);
+      }
+    }
   });
 
   return {

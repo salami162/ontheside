@@ -97,8 +97,10 @@ define([
       .attr('dy', '0.95em');
 
     this.svgChart.select('text.' + d.name)
+      .text(function(d) { return d.name; })
       .classed('highlight', false)
-      .attr('dx', 16);
+      .attr('dx', 16)
+      .attr('dy', '.95em');
 
     this.svgChart
       .selectAll('path.link.' + d.name)
