@@ -113,6 +113,10 @@ div#loading {
   background: url('../images/loading.gif') center center no-repeat;
 }
 
-.client-dashboard .modal-footer .graph-choice {
-  float: left;
+.client-dashboard .modal-body .dashboard-details .text-info {
+  padding: 10px 0;
+}
+
+.client-dashboard .modal-body .dashboard-details .detail-item {
+  line-height: 25px;
 }
