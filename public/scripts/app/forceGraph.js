@@ -161,14 +161,14 @@ define([
       return nd.sum;
     });
     var maxRadius = this.r * 5;
-    var dimension = Math.max(this.width, this.height);
-    var ratio = dimension / thickestLink.value;
+    var dimension = Math.min(this.width, this.height);
+    var ratio = dimension * thinestLink.value; // dimension / thickestLink.value;
     var ratior = maxRadius / heaviestNode.sum;
 
     var color = ['#00CC00', '#ff7f0e'];
     this.force
         .linkDistance(function (d) {
-          return d.value * ratio;
+          return ratio / d.value;
         });
 
     this.force
