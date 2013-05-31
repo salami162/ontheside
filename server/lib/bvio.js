@@ -137,7 +137,7 @@ function processGraphData (rawData, reference) {
     .map(function (vertex) {
       return vertex.name;
     }).sort();
-console.log(graphData.nodes);
+
   return graphData;
 }
 
