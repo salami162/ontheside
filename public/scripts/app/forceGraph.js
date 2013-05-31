@@ -4,7 +4,7 @@ define([
 ], function (_, d3) {
 
   function forceGraph (selector, width, height, view) {
-    this.margin = [20, 20, 20, 20];
+    this.margin = [10, 10, 10, 10];
     this.r = 10;
     this.width = (width - this.margin[1] - this.margin[3]) || 800;
     this.height = (height - this.margin[0] - this.margin[2]) || 600;
