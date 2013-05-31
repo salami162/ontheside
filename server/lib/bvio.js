@@ -11,7 +11,7 @@ function BVIO (client) {
   this.paths = {
     clientGraph : '/graph/enhanced/client',
     clientDashboard : '/client/dashboard/',
-    clientCenterGraph : '/graph/client/'
+    clientCenterGraph : '/graph/enhanced/client/'
   };
 
   this.queryParams = {
