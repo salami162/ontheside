@@ -57,7 +57,7 @@ define([
     this.svgChart.select('circle.' + d.name)
       .transition()
       .duration(100)
-      .attr('r', this.r * 2.5);
+      .attr('r', Math.max( (d.finalRadius * 1.5), (this.r * 2.5) ) );
 
     this.svgChart.select('text.' + d.name)
       .classed('highlight', true)
@@ -91,7 +91,7 @@ define([
     this.svgChart.select('circle.' + d.name)
       .transition()
       .duration(100)
-      .attr('r', this.r)
+      .attr('r', d.finalRadius)
       .attr('dy', '0.95em');
 
     this.svgChart.select('text.' + d.name)
@@ -216,7 +216,8 @@ define([
         return d.name;
       })
       .attr('r', function (d) {
-        return Math.max(5, (d.sum * ratior));
+        d.finalRadius = Math.max(5, (d.sum * ratior));
+        return d.finalRadius;
       })
       .style('fill', function (d) {
         return color[d.group];
