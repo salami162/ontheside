@@ -90,18 +90,18 @@ define([
       Global.Bus.trigger('switchTab', tabName);
     },
 
+    fetchDashboard : function (client) {
+      Loading.show();
+      Global.Bus.trigger( 'fetchClientDashboard', client, this.model.get('filters') );
+    },
+
     drawClientGraph : function (data) {
       var self = this;
       this.$('div#network svg.chart').empty();
       Loading.hide();
       this.$('#chart-tabs a:first').tab('show');
-      var forceGraph = new ForceGraph( 'div#network svg.chart', this.width, this.height, this );
+      var forceGraph = new ForceGraph('div#network svg.chart', this.width, this.height, this);
       forceGraph.draw(data);
-    },
-
-    fetchDashboard : function (client) {
-      Loading.show();
-      Global.Bus.trigger( 'fetchClientDashboard', client, this.model.get('filters') );
     },
 
     drawClientCenterGraph : function (data) {
@@ -121,8 +121,8 @@ define([
 
       this.$('#chart-tabs a.' + targetClient).tab('show');
 
-      var treeGraph = new ForceGraph( selector, this.width, this.height, this );
-      treeGraph.draw(data);
+      var forceGraph = new ForceGraph(selector, this.width, this.height, this);
+      forceGraph.draw(data, true, targetClient);
 
       Loading.hide();
     }

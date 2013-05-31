@@ -1,7 +1,8 @@
 define([
   'vendor/underscore',
-  'vendor/d3.v3'
-], function (_, d3) {
+  'vendor/d3.v3',
+  'global'
+], function (_, d3, Global) {
 
   function forceGraph (selector, width, height, view) {
     this.margin = [10, 10, 10, 10];
@@ -52,9 +53,62 @@ define([
       return this;
   };
 
-  forceGraph.prototype._displayWeight = function (d) {
+  forceGraph.prototype._highlightNode = function (d) {
     var self = this;
     var newr = Math.max( (d.finalRadius * 1.5), (this.r * 2.5) );
+
+    var links = this.svgChart.selectAll('path.link.' + d.name)
+      .classed('highlight', true);
+
+    var linkWeight = 0;
+    if (this.showWeight) {
+      _(links[0]).forEach(function(slink) {
+        // var sourceX = Math.ceil(slink.attributes.x1.value);
+        // var targetX = Math.ceil(slink.attributes.x2.value);
+        // var sourceY = Math.ceil(slink.attributes.y1.value);
+        // var targetY = Math.ceil(slink.attributes.y2.value);
+        // var deltaX = targetX - sourceX;
+        // var deltaY = targetY - sourceY;
+        // var dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        // var newX = sourceX + deltaX;
+        // var newY = sourceY + deltaY;
+        // var pathText = self.svgChart.append("text")
+        //   .attr('class','link_text')
+        //   .attr( 'x', 0 )
+        //   .attr( 'dy', 0 );
+
+        // pathText.append('textPath')
+        //   .attr('xlink:href', function() {
+        //     return '#' + slink.id;
+        //   })
+        //   .attr('class','text_path')
+        //   .style('fill','#000')
+        //   .text(function(text, i) {
+        //     var ids = slink.id.split('_');
+        //     return ids.pop();
+        //   });
+        var ids = slink.id.split('_');
+        var w = parseInt( ids.pop() );
+
+        if (d.name !== self.targetClient) {
+          self.svgChart.select('text.' + d.name)
+            .text(function (t) {
+              return t.name + '(' + w + ')';
+            });
+        }
+        else {
+          var other = _(ids).find(function (id) {
+            return id !== d.name;
+          });
+          self.svgChart.select('text.' + other)
+            .text(function (t) {
+              return t.name + '(' + w + ')';
+            });
+        }
+      });
+    }
+
     this.svgChart.select('circle.' + d.name)
       .transition()
       .duration(100)
@@ -65,30 +119,11 @@ define([
       .attr('dx', 0 )
       .attr('dy', 0 );
 
-    var links = this.svgChart.selectAll('path.link.' + d.name)
-      .classed('highlight', true);
-
-    // _(links[0]).forEach(function(slink) {
-    //   var pathText = self.svgChart.append("text")
-    //     .attr('class','link_text')
-    //     .attr('x', 20)
-    //     .attr('dy', 25);
-
-    //   pathText.append('textPath')
-    //     .attr('xlink:href', function() {
-    //       return '#' + slink.id;
-    //     })
-    //     .attr('class','text_path')
-    //     .style('fill','#000')
-    //     .text(function(text, i) {
-    //       var ids = slink.id.split('_');
-    //       return ids.pop();
-    //     });
-    // });
     return this;
   };
 
-  forceGraph.prototype._removeDisplay = function (d) {
+  forceGraph.prototype._removeHighlight = function (d) {
+    var self = this;
     this.svgChart.select('circle.' + d.name)
       .transition()
       .duration(100)
@@ -96,6 +131,9 @@ define([
       .attr('dy', '0.95em');
 
     this.svgChart.select('text.' + d.name)
+      .text(function (t) {
+        return t.name;
+      })
       .classed('highlight', false)
       .attr('dx', 16)
       .attr('dy', '.95em');
@@ -104,9 +142,25 @@ define([
       .selectAll('path.link.' + d.name)
       .classed('highlight', false);
 
-    this.svgChart
-      .selectAll('text.link_text')
-      .remove();
+    // this.svgChart
+    //   .selectAll('text.link_text')
+    //   .remove();
+
+    if (this.showWeight && d.name === this.targetClient) {
+      var links = this.svgChart.selectAll('path.link.' + d.name);
+      _(links[0]).forEach(function(slink) {
+        var ids = slink.id.split('_');
+        var w = parseInt( ids.pop() );
+
+        var other = _(ids).find(function (id) {
+          return id !== d.name;
+        });
+        self.svgChart.select('text.' + other)
+          .text(function (t) {
+            return t.name;
+          });
+      });
+    }
     return this;
   };
 
@@ -121,6 +175,7 @@ define([
     var self = this;
     var link = this.svgChart.selectAll('.link');
     var node = this.svgChart.selectAll('.node');
+
     // draw directed edges with proper padding from node centers
     link.attr('d', function(d) {
       var dsourcex = Math.min( self.width, Math.max(0, d.source.x) );
@@ -128,18 +183,30 @@ define([
       var dtargetx = Math.min( self.width, Math.max(0, d.target.x) );
       var dtargety = Math.min( self.width, Math.max(0, d.target.y) );
 
-      var deltaX = dtargetx - dsourcex,
-          deltaY = dtargety - dsourcey,
-          dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-          normX = dist === 0 ? 0 : deltaX / dist,
-          normY = dist === 0 ? 0 : deltaY / dist,
-          sourcePadding = d.left ? 17 : 12,
-          targetPadding = d.right ? 17 : 12,
-          sourceX = dsourcex,// + (sourcePadding * normX),
-          sourceY = dsourcey,// + (sourcePadding * normY),
-          targetX = dtargetx,// - (targetPadding * normX),
-          targetY = dtargety;// - (targetPadding * normY);
+      // var deltaX = dtargetx - dsourcex;
+      // var deltaY = dtargety - dsourcey;
+      // var dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      // var normX = dist === 0 ? 0 : deltaX / dist;
+      // var normY = dist === 0 ? 0 : deltaY / dist;
+      // var sourcePadding = d.left ? 17 : 12;
+      // var targetPadding = d.right ? 17 : 1;
+      var sourceX = dsourcex; // + (sourcePadding * normX),
+      var sourceY = dsourcey; // + (sourcePadding * normY),
+      var targetX = dtargetx; // - (targetPadding * normX),
+      var targetY = dtargety; // - (targetPadding * normY);
       return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+    })
+    .attr("x1", function(d) {
+      return Math.min( self.width, Math.max(0, d.source.x) );
+    })
+    .attr("y1", function(d) {
+      return Math.min( self.width, Math.max(0, d.source.y) );
+    })
+    .attr("x2", function(d) {
+      return Math.min( self.width, Math.max(0, d.target.x) );
+    })
+    .attr("y2", function(d) {
+      return Math.min( self.width, Math.max(0, d.target.y) );
     });
 
     node.attr("cx", function(d) { return d.x = Math.max(self.r, Math.min(self.width - self.r, d.x)); })
@@ -151,7 +218,9 @@ define([
     return this;
   };
 
-  forceGraph.prototype.draw = function (data) {
+  forceGraph.prototype.draw = function (data, displayWeight, targetClient) {
+    this.showWeight = displayWeight;
+    this.targetClient = targetClient;
     var self = this;
     var thickestLink = _(data.links).max(function (path) {
       return path.value;
@@ -206,8 +275,8 @@ define([
           return 'node ' + d.name;
         })
         .call(this.force.drag)
-        .on( 'mouseover', _.bind(this._displayWeight, this) )
-        .on( 'mouseout', _.bind(this._removeDisplay, this) )
+        .on( 'mouseover', _.bind(this._highlightNode, this) )
+        .on( 'mouseout', _.bind(this._removeHighlight, this) )
         .on( 'mousedown', this._addSticky)
         .on( 'dblclick', function (d) {
           self.responseView.trigger('fetchDashboard', d.name);
