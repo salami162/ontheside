@@ -105,7 +105,7 @@ function processGraphData (rawData, reference) {
 
   graphData.nodes = _(vertices)
     .chain()
-    .sort(function (vertex) {
+    .sortBy(function (vertex) {
       return vertex.id;
     })
     .map(function (vertex) {
@@ -130,6 +130,7 @@ function processGraphData (rawData, reference) {
     .map(function (vertex) {
       return vertex.name;
     }).sort();
+
   return graphData;
 }
 
