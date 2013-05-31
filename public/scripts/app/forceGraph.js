@@ -4,7 +4,7 @@ define([
 ], function (_, d3) {
 
   function forceGraph (selector, width, height, view) {
-    this.margin = [20, 20, 20, 20];
+    this.margin = [10, 10, 10, 10];
     this.r = 10;
     this.width = (width - this.margin[1] - this.margin[3]) || 800;
     this.height = (height - this.margin[0] - this.margin[2]) || 600;
@@ -154,8 +154,17 @@ define([
     var thickestLink = _(data.links).max(function (path) {
       return path.value;
     });
+    var thinestLink = _(data.links).min(function (path) {
+      return path.value;
+    });
+    var heaviestNode = _(data.nodes).max(function (nd) {
+      return nd.sum;
+    });
+    var maxRadius = this.r * 5;
     var dimension = Math.max(this.width, this.height);
     var ratio = dimension / thickestLink.value;
+    var ratior = maxRadius / heaviestNode.sum;
+
     var color = ['#00CC00', '#ff7f0e'];
     this.force
         .linkDistance(function (d) {
@@ -180,13 +189,13 @@ define([
         })
         .style("stroke-width", function(d) {
           return Math.ceil( (d.value / thickestLink.value) * 10 );
-        })
-        .style('marker-start', function(d) {
-          return d.left ? 'url(#start-arrow)' : '';
-        })
-        .style('marker-end', function(d) {
-          return d.right ? 'url(#end-arrow)' : '';
         });
+        // .style('marker-start', function(d) {
+        //   return d.left ? 'url(#start-arrow)' : '';
+        // })
+        // .style('marker-end', function(d) {
+        //   return d.right ? 'url(#end-arrow)' : '';
+        // });
 
     var node = this.svgChart.selectAll('.node')
         .data(data.nodes)
@@ -206,7 +215,9 @@ define([
       .attr('class', function (d) {
         return d.name;
       })
-      .attr('r', this.r)
+      .attr('r', function (d) {
+        return Math.max(5, (d.sum * ratior));
+      })
       .style('fill', function (d) {
         return color[d.group];
       })
