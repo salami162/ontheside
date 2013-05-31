@@ -60,7 +60,6 @@ define([
     var links = this.svgChart.selectAll('path.link.' + d.name)
       .classed('highlight', true);
 
-    var linkWeight = 0;
     if (this.showWeight) {
       _(links[0]).forEach(function(slink) {
         // var sourceX = Math.ceil(slink.attributes.x1.value);
@@ -94,7 +93,7 @@ define([
         if (d.name !== self.targetClient) {
           self.svgChart.select('text.' + d.name)
             .text(function (t) {
-              return t.name + '(' + w + ')';
+              return t.name + ' (' + w + ')';
             });
         }
         else {
@@ -103,7 +102,7 @@ define([
           });
           self.svgChart.select('text.' + other)
             .text(function (t) {
-              return t.name + '(' + w + ')';
+              return t.name + ' (' + w + ')';
             });
         }
       });
@@ -138,7 +137,7 @@ define([
       .attr('dx', 16)
       .attr('dy', '.95em');
 
-    this.svgChart
+    var links = this.svgChart
       .selectAll('path.link.' + d.name)
       .classed('highlight', false);
 
@@ -147,7 +146,6 @@ define([
     //   .remove();
 
     if (this.showWeight && d.name === this.targetClient) {
-      var links = this.svgChart.selectAll('path.link.' + d.name);
       _(links[0]).forEach(function(slink) {
         var ids = slink.id.split('_');
         var w = parseInt( ids.pop() );
