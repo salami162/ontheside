@@ -61,7 +61,6 @@ define([
       .attr('r', newr);
 
     this.svgChart.select('text.' + d.name)
-      .text(function(d) { return d.name + '(' + d.sum + ')'; })
       .classed('highlight', true)
       .attr('dx', 0 )
       .attr('dy', 0 );
@@ -97,7 +96,6 @@ define([
       .attr('dy', '0.95em');
 
     this.svgChart.select('text.' + d.name)
-      .text(function(d) { return d.name; })
       .classed('highlight', false)
       .attr('dx', 16)
       .attr('dy', '.95em');
