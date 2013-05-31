@@ -60,7 +60,7 @@ define([
 
   })
 
-}(window.jQuery);/* ==========================================================
+}($);/* ==========================================================
  * bootstrap-alert.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#alerts
  * ==========================================================
@@ -158,7 +158,7 @@ define([
 
   $(document).on('click.alert.data-api', dismiss, Alert.prototype.close)
 
-}(window.jQuery);/* ============================================================
+}($);/* ============================================================
  * bootstrap-button.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#buttons
  * ============================================================
@@ -262,7 +262,7 @@ define([
     $btn.button('toggle')
   })
 
-}(window.jQuery);/* ==========================================================
+}($);/* ==========================================================
  * bootstrap-carousel.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#carousel
  * ==========================================================
@@ -468,7 +468,7 @@ define([
     e.preventDefault()
   })
 
-}(window.jQuery);/* =============================================================
+}($);/* =============================================================
  * bootstrap-collapse.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#collapse
  * =============================================================
@@ -634,7 +634,7 @@ define([
     $(target).collapse(option)
   })
 
-}(window.jQuery);/* ============================================================
+}($);/* ============================================================
  * bootstrap-dropdown.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#dropdowns
  * ============================================================
@@ -802,7 +802,7 @@ define([
     .on('click.dropdown.data-api'  , toggle, Dropdown.prototype.toggle)
     .on('keydown.dropdown.data-api', toggle + ', [role=menu]' , Dropdown.prototype.keydown)
 
-}(window.jQuery);
+}($);
 /* =========================================================
  * bootstrap-modal.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#modals
@@ -1049,7 +1049,7 @@ define([
       })
   })
 
-}(window.jQuery);
+}($);
 /* ===========================================================
  * bootstrap-tooltip.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#tooltips
@@ -1410,7 +1410,7 @@ define([
     return this
   }
 
-}(window.jQuery);
+}($);
 /* ===========================================================
  * bootstrap-popover.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#popovers
@@ -1524,7 +1524,7 @@ define([
     return this
   }
 
-}(window.jQuery);
+}($);
 /* =============================================================
  * bootstrap-scrollspy.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#scrollspy
@@ -1686,7 +1686,7 @@ define([
     })
   })
 
-}(window.jQuery);/* ========================================================
+}($);/* ========================================================
  * bootstrap-tab.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#tabs
  * ========================================================
@@ -1829,7 +1829,7 @@ define([
     $(this).tab('show')
   })
 
-}(window.jQuery);/* =============================================================
+}($);/* =============================================================
  * bootstrap-typeahead.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#typeahead
  * =============================================================
@@ -2163,7 +2163,7 @@ define([
     $this.typeahead($this.data())
   })
 
-}(window.jQuery);
+}($);
 /* ==========================================================
  * bootstrap-affix.js v2.3.2
  * http://twitter.github.com/bootstrap/javascript.html#affix
