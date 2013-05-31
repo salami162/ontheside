@@ -3,7 +3,7 @@ var BVIO = require('../lib/bvio');
 
 exports.index = function (req, res) {
   var data = {
-    title : 'Limin Shen'
+    title : 'BV Network Audience'
   };
   res.render('index', data);
 };
