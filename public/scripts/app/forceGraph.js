@@ -154,6 +154,9 @@ define([
     var thickestLink = _(data.links).max(function (path) {
       return path.value;
     });
+    var thinestLink = _(data.links).min(function (path) {
+      return path.value;
+    });
     var heaviestNode = _(data.nodes).max(function (nd) {
       return nd.sum;
     });
@@ -164,7 +167,7 @@ define([
 
     var color = ['#00CC00', '#ff7f0e'];
     this.force
-        .distance(function (d) {
+        .linkDistance(function (d) {
           return d.value * ratio;
         });
 
