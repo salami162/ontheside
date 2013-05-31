@@ -136,6 +136,9 @@ function processGraphData (rawData, reference) {
 
 function processDashboardData (rawData, reference) {
   rawData = JSON.parse(rawData);
+  if (rawData.uniques && rawData.uniques.earliestVisitor) {
+    rawData.uniques.earliestVisitor = moment(rawData.uniques.earliestVisitor).format('L');
+  }
   var dashboard = {
     name : reference.client,
     children : buildNode(rawData)

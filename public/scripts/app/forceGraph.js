@@ -158,7 +158,7 @@ define([
     var ratio = dimension / thickestLink.value;
     var color = ['#00CC00', '#ff7f0e'];
     this.force
-        .distance(function (d) {
+        .linkDistance(function (d) {
           return d.value * ratio;
         });
 

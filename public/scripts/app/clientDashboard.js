@@ -57,42 +57,111 @@ define([
     showDashboard : function () {
       Loading.hide();
       var data = this.model.toJSON();
+
+      var numbers = function(num) {
+        var largeIntegerSuffixSpecs = [
+          {
+            factor: 1,
+            ceiling: Math.pow(10, 6),
+            suffix: undefined
+          },
+          {
+            factor: Math.pow(10, 6),
+            ceiling: Math.pow(10, 9),
+            suffix: ' million'
+          },
+          {
+            factor: Math.pow(10, 9),
+            ceiling: Math.pow(10, 12),
+            suffix: ' billion'
+          },
+          {
+            factor: Math.pow(10, 12),
+            ceiling: Math.pow(10, 15),
+            suffix: ' trillion'
+          }
+        ];
+
+        var index = 0;
+        for (;index < largeIntegerSuffixSpecs.length; index++) {
+          if (num < largeIntegerSuffixSpecs[index].ceiling) {
+            break;
+          }
+        }
+
+        var spec = largeIntegerSuffixSpecs[index];
+        if (spec.suffix) {
+          return (num / spec.factor).toFixed(2) + spec.suffix;
+        }
+        return num
+      };
+
+      var context = {
+        formatters: {
+          uniqueData: function(key, val) {
+            if (key === 'earliestVisitor') {
+              return val;
+            } else {
+              return numbers(val);
+            }
+          },
+
+          tracking: function(val) {
+            var aliases = {
+              "1st": "First Party",
+              "3rd": "Third Party (network)",
+              "anon": "No Tracking",
+              "1stAnd3rd": "First & Third Party"
+            };
+            return aliases[val];
+          },
+
+          number: function(num) {
+            return numbers(num);
+          },
+
+          label: function(key) {
+            return key ? key : 'total'
+          }
+        }
+      };
+
       if (data && data.raw) {
         var template = '<div class="dashboard-details">'
                      + '  <div class="row-fluid">'
-                     + '    <div class="span4">'
+                     + '    <div class="span6">'
                      + '      <div class="text-info"><strong>Impressions</strong></div>'
                      + '      <% _.each(impressions, function (data, key) { %>'
-                     + '        <span class="detail-item"><strong><%= key %> : </strong> <%= data.total %></span>'
+                     + '        <div class="detail-item"><strong><%= formatters.label(key) %> : </strong> <%= formatters.number(data.total) %></div>'
                      + '      <% }); %>'
                      + '    </div>'
-                     + '    <div class="span4">'
+                     + '    <div class="span6">'
                      + '      <div class="text-info"><strong>PageViews</strong></div>'
                      + '      <% _.each(pageViews.pageTypes, function (data, key) { %>'
-                     + '        <span class="detail-item"><strong><%= key %> : </strong><%= data.total %></span>'
-                     + '      <% }); %>'
-                     + '    </div>'
-                     + '    <div class="span4">'
-                     + '      <div class="text-info"><strong>Tracking Types</strong></div>'
-                     + '      <% _.each(details.tracking, function (data) { %>'
-                     + '        <span class="detail-list"><%= data %></span>'
+                     + '        <div class="detail-item"><strong><%= formatters.label(key) %> : </strong><%= formatters.number(data.total) %></div>'
                      + '      <% }); %>'
                      + '    </div>'
                      + '  </div><br /><br />'
                      + '  <div class="row-fluid">'
-                     + '    <div class="span12">'
-                     + '    <div class="text-info"><strong>Uniques</strong></div>'
-                     + '    <% _.each(uniques, function (data, key) { %>'
-                     + '      <% if (data) { %>'
-                     + '      <span class="detail-item"><strong><%= key %> : </strong><%= data %></span>'
-                     + '      <% } %>'
-                     + '    <% }); %>'
+                     + '    <div class="span6">'
+                     + '      <div class="text-info"><strong>Uniques</strong></div>'
+                     + '      <% _.each(uniques, function (data, key) { %>'
+                     + '        <% if (data) { %>'
+                     + '        <div class="detail-item"><strong><%= formatters.label(key) %> : </strong><%= formatters.uniqueData(key, data) %></div>'
+                     + '        <% } %>'
+                     + '      <% }); %>'
+                     + '    </div>'
+                     + '    <div class="span6">'
+                     + '      <div class="text-info"><strong>Tracking Types</strong></div>'
+                     + '      <% _.each(details.tracking, function (data) { %>'
+                     + '        <div class="detail-item"><%= formatters.tracking(data) %></div>'
+                     + '      <% }); %>'
                      + '    </div>'
                      + '  </div>'
                      + '</div>';
 
         var compiled = _.template(template);
-        var html = compiled(data.raw);
+        var html = compiled(_.extend(context, data.raw));
         this.$('.modal-body').html(html);
         this.$el.modal('show');
       }

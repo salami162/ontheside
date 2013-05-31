@@ -18,7 +18,7 @@ html
             ul.nav
               li
                 span.find-client-label Find Client:
-                input#find-client.input-small.typeahead(name='targetClient', type='text', placeholder='walmart', data-provide='typeahead')
+                input#find-client.input-small.typeahead(name='targetClient', type='text', placeholder='client...', data-provide='typeahead')
               li
                 span.time-frame-label Time Frame:
                 select#time-frame(name='timeFrame')
@@ -27,7 +27,7 @@ html
                   option(value="LAST_DAY") Last day
               li
                 span.weight-limit-label Min Weight:
-                input#weight-limit.input-small(name='minWeight', type='text', placeholder='50000')
+                input#weight-limit.input-small(name='minWeight', type='text', placeholder='default: 50000')
               li
                 button#update-chart.btn(type='button') Go!
     div.container
