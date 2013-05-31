@@ -109,8 +109,15 @@ function processGraphData (rawData, reference) {
       return vertex.id;
     })
     .map(function (vertex) {
+      var weight = 0;
+      _(edges).forEach(function (eg) {
+        if (eg.from === vertex.id || eg.to === vertex.id) {
+          weight = weight + eg.weight;
+        }
+      });
       return {
         name : vertex.name,
+        sum : weight,
         group : vertex.networkCookie ? 0 : 1
       };
     }).value();
@@ -130,7 +137,7 @@ function processGraphData (rawData, reference) {
     .map(function (vertex) {
       return vertex.name;
     }).sort();
-
+console.log(graphData.nodes);
   return graphData;
 }
 
