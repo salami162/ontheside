@@ -54,15 +54,17 @@ define([
 
   forceGraph.prototype._displayWeight = function (d) {
     var self = this;
+    var newr = Math.max( (d.finalRadius * 1.5), (this.r * 2.5) );
     this.svgChart.select('circle.' + d.name)
       .transition()
       .duration(100)
-      .attr('r', Math.max( (d.finalRadius * 1.5), (this.r * 2.5) ) );
+      .attr('r', newr);
 
     this.svgChart.select('text.' + d.name)
+      .text(function(d) { return d.name + '(' + d.sum + ')'; })
       .classed('highlight', true)
-      .attr('dx', (0 - (this.r * 5) / 2))
-      .attr('dy', '-0.95em');
+      .attr('dx', 0 )
+      .attr('dy', 0 );
 
     var links = this.svgChart.selectAll('path.link.' + d.name)
       .classed('highlight', true);
