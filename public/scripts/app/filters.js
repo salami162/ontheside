@@ -49,7 +49,7 @@ define([
       var filters = {
         targetClient : this.$('input#find-client').val() || '*',
         timeFrame : this.$('select#time-frame').val() || 'LAST_30_DAYS',
-        minWeight : Math.max(this.$('input#weight-limit').val() || 50000, 50000)
+        minWeight : Math.max(this.$('input#weight-limit').val() || 50000, 1000)
       };
       Loading.show();
       this.model.trigger('updateFilters', filters);
