@@ -96,6 +96,10 @@ define([
         return num
       };
 
+      var label = function(key, aliases) {
+        return aliases[key] ? aliases[key] : key;
+      };
+
       var context = {
         formatters: {
           uniqueData: function(key, val) {
@@ -108,20 +112,25 @@ define([
 
           tracking: function(val) {
             var aliases = {
-              "1st": "First Party",
-              "3rd": "Third Party (network)",
-              "anon": "No Tracking",
-              "1stAnd3rd": "First & Third Party"
+              "1st": "Client (1st party cookie)",
+              "3rd": "Network (3rd party cookie)",
+              "anon": "Anonymous",
+              "1stAnd3rd": "Network + Client"
             };
-            return aliases[val];
+            return label(val, aliases);
+          },
+
+          uniqueKeys: function(key) {
+            var aliases = {
+              "clientVisitors": "@ client",
+              "totalNetworkVisitors": "network-wide",
+              "earliestVisitor": "from"
+            };
+            return label(key, aliases);
           },
 
           number: function(num) {
             return numbers(num);
-          },
-
-          label: function(key) {
-            return key ? key : 'total'
           }
         }
       };
@@ -132,13 +141,16 @@ define([
                      + '    <div class="span6">'
                      + '      <div class="text-info"><strong>Impressions</strong></div>'
                      + '      <% _.each(impressions, function (data, key) { %>'
-                     + '        <div class="detail-item"><strong><%= formatters.label(key) %> : </strong> <%= formatters.number(data.total) %></div>'
+                     + '        <div class="detail-item"><strong><%= key %> : </strong> <%= formatters.number(data.total) %></div>'
                      + '      <% }); %>'
                      + '    </div>'
                      + '    <div class="span6">'
                      + '      <div class="text-info"><strong>PageViews</strong></div>'
-                     + '      <% _.each(pageViews.pageTypes, function (data, key) { %>'
-                     + '        <div class="detail-item"><strong><%= formatters.label(key) %> : </strong><%= formatters.number(data.total) %></div>'
+                     + '        <div class="detail-item"><strong>total : </strong><%= formatters.number(pageViews.total) %></div>'
+                     + '        <% _.each(pageViews.pageTypes, function (data, key) { %>'
+                     + '          <% if (key) { %>'
+                     + '            <div class="detail-item"><strong><%= key %> : </strong><%= formatters.number(data.total) %></div>'
+                     + '          <% } %>'
                      + '      <% }); %>'
                      + '    </div>'
                      + '  </div><br /><br />'
@@ -147,7 +159,7 @@ define([
                      + '      <div class="text-info"><strong>Uniques</strong></div>'
                      + '      <% _.each(uniques, function (data, key) { %>'
                      + '        <% if (data) { %>'
-                     + '        <div class="detail-item"><strong><%= formatters.label(key) %> : </strong><%= formatters.uniqueData(key, data) %></div>'
+                     + '        <div class="detail-item"><strong><%= formatters.uniqueKeys(key) %> : </strong><%= formatters.uniqueData(key, data) %></div>'
                      + '        <% } %>'
                      + '      <% }); %>'
                      + '    </div>'
@@ -163,6 +175,7 @@ define([
         var compiled = _.template(template);
         var html = compiled(_.extend(context, data.raw));
         this.$('.modal-body').html(html);
+        this.$('#modal-title').html(data.filters.targetClient);
         this.$el.modal('show');
       }
     },
