@@ -2,12 +2,14 @@ var util = require('util');
 var querystring = require('querystring');
 var request = require('request');
 var moment = require('moment');
+var fs = require('fs');
 var _ = require('underscore');
 _.mixin(require('underscore.deferred'));
 
 function BVIO (client) {
   // Set up the base URL and the dictionary of reusable query parameters
   this.host = 'web-cdh4-bv-io-client-graph.mag.bazaarvoice.com:8080/api';
+  this.serveLocal = true; // set to true to read json file locally.
   this.paths = {
     clientGraph : '/graph/enhanced/client',
     clientDashboard : '/client/dashboard/',
@@ -34,11 +36,14 @@ function BVIO (client) {
   this.headers = {
     'Content-Type' : 'application/json'
   };
+
+  // for local json data file
+  this.fileHost = __dirname + '/../data/';
 }
 
 BVIO.prototype.setFilterDates = function (timeFrame) {
   this.filters = this.filters || {};
-  delete this.filters.timeFrame;
+  this.filters.timeFrame = timeFrame;
 
   var currentDate = moment();
   this.filters.end_date = currentDate.format('YYYYMMDD');
@@ -65,6 +70,28 @@ BVIO.prototype.setClient = function (name) {
   return this;
 };
 
+// format lookup key based on filters
+BVIO.prototype._getLocalKey = function (type) {
+  var filterFormat = {
+    clientGraph : util.format('%s_%s', this.filters.minWeight, this.filters.timeFrame),
+    clientDashboard : util.format('%s_%s', this.client, this.filters.timeFrame),
+    clientCenterGraph : util.format('%s_%s_%s', this.client, this.filters.minWeight, this.filters.timeFrame)
+  }
+  var key = filterFormat[type].toLowerCase();
+  console.log('lookup key = ', key);
+  return key;
+};
+// build a path to the local JSON file
+BVIO.prototype._buildLocalPath = function (type) {
+  var filePath = {
+    clientGraph : 'network-graph',
+    clientDashboard : 'client-details',
+    clientCenterGraph : 'client-graph'
+  };
+  return this.fileHost + filePath[type] + '.json';
+};
+
+// build real URL to the server if "serveLocal" flag is not set to true
 BVIO.prototype._buildUrl = function (type) {
   var queryParams = _.extend({}, this.queryParams, this.filters);
 
@@ -83,19 +110,31 @@ BVIO.prototype._buildUrl = function (type) {
 };
 
 BVIO.prototype.request = function (path) {
-  var requestDfd = _.Deferred();
-  var url = this._buildUrl(path);
-  console.log(path, url);
   var self = this;
-  request(url, function (error, response, body) {
-    requestDfd.resolve( self.processFunc[path](body, self) );
-  });
+  var requestDfd = _.Deferred();
+  var url = this.serveLocal ? this._buildLocalPath(path) : this._buildUrl(path);
+  console.log(path, url);
+
+  if (this.serveLocal) {
+    var key = this._getLocalKey(path);
+    fs.readFile(url, 'utf8', function (err, data) {
+      if (err) {
+        throw err;
+      }
+      var jsonData = JSON.parse(data);
+      requestDfd.resolve( self.processFunc[path]( (jsonData[key] || jsonData['default']), self) );
+    });
+  }
+  else {
+    request(url, function (error, response, body) {
+      requestDfd.resolve( self.processFunc[path](JSON.parse(body), self) );
+    });
+  }
 
   return requestDfd.promise();
 };
 
 function processGraphData (rawData, reference) {
-  rawData = JSON.parse(rawData);
   var graphData = {
     nodes : [],
     links : []
@@ -142,7 +181,6 @@ function processGraphData (rawData, reference) {
 }
 
 function processDashboardData (rawData, reference) {
-  rawData = JSON.parse(rawData);
   if (rawData.uniques && rawData.uniques.earliestVisitor) {
     rawData.uniques.earliestVisitor = moment(rawData.uniques.earliestVisitor).format('L');
   }

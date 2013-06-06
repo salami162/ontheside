@@ -39,7 +39,6 @@ define([
         if (data && data.clients) {
           self.get('filtersModel').trigger('updateClients', data.clients);
         }
-        console.log(data);
         self.trigger('drawClientGraph', data);
       })
       .fail(function (error) {
