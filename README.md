@@ -1,7 +1,7 @@
-Author:
+### Author:
   Limin Shen
 
-Description:
+### Description:
   Something fun.
   Evan and I decided to make this project our Hackathon theme - Magpie Graph.
   This project runs on a node server.  Client side objects are backbone models and views.  It references bootstape for many other things.
