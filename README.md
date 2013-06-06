@@ -10,4 +10,4 @@
 - checkout the repo.
 - run ```npm install```to download all the node modules that are used in this project.
 - run ```./run.sh``` to start the server.
-- open a browser and visit "http://localhost:3000/".
+- open a browser and visit ```http://localhost:3000/```.
