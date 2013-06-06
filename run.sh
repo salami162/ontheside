@@ -1,7 +1,7 @@
 #! /bin/bash
 
 WATCH_DIRS='public,.'
-WATCH_TYPES='hbs|json|js|css'
+WATCH_TYPES='hbs|json|js|css|jade'
 
 
 cleanupEnvironment() {

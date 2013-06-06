@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": false,
   "homepage": "https://github.com/salami162",
-  "author": "Limin Shen <limin.braganza@gmail.com.com>",
+  "author": "Limin Shen <limin.braganza@gmail.com>",
   "engines": {
     "node": "0.8.1"
   },

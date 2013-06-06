@@ -13,7 +13,7 @@ define([
 
     initialize : function (attrs, options) {
       this.set({
-        baseUrl : 'http://localhost:3000'
+        baseUrl : '../'
       });
     },
 
@@ -24,7 +24,7 @@ define([
     },
 
     url : function (type) {
-      var fetchUrl = this.get('baseUrl') + '/' + type;
+      var fetchUrl = this.get('baseUrl') + type;
       var params = _.extend( {}, this.get('filters') );
       var paramString = '';
       _(params).forEach(function (val, key) {
