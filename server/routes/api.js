@@ -19,9 +19,3 @@ function loadFile (filename, encoding) {
 	}
 } // loadJSONfile
 
-
-exports.clientGraph = function (req, res) {
-  console.log('routs find');
-  res.partial('clientGraph', {title : 'new title'});
-};
-
