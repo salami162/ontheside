@@ -1,0 +1,54 @@
+extends layout
+
+block customStyles
+  link(rel="stylesheet", href="/styles/foosball.css")
+
+
+block content
+  div.ranking
+    div.player-ranking-head
+      div.player-name 
+        h4 NAME
+      div.player-win 
+        h4 WIN
+      div.player-tie 
+        h4 TIE
+      div.player-loss 
+        h4 LOSS
+    ul
+      for ranking in rankings
+        li.player-ranking
+          div.player-name #{ranking.name}
+          div.player-win #{ranking.win}
+          div.player-tie #{ranking.tie}
+          div.player-loss #{ranking.loss}
+
+  div.btn-group
+    a.btn.btn-default.btn-primary.btn-newgame(href="#new-game",data-toggle="modal") Start a New Game
+
+  div.game
+    ul.game-players
+
+  div#new-game.modal.hide.fade
+    div.modal-header
+      button.close(type="button",data-dismiss="modal",aria-hidden="true") &times;
+      h3 Please Enter Players
+    div.modal-body
+      div
+        div.player1
+          span Player1:
+          input(type="text",placeholder="e.g. Alex",value="mike")
+        div.player2
+          span Player2:
+          input(type="text",placeholder="e.g. Brent",value="limin")
+    div.modal-footer
+      button.btn.btn-close close
+      button.btn.btn-primary.btn-save Save
+ 
+block customScripts
+  script(src="/scripts/require.js", data-main="/scripts/foosballMain.js")
+
+  script
+    var rankings = !{JSON.stringify(rankings)};
+    var scores = !{JSON.stringify(scores)};
+

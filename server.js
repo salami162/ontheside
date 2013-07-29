@@ -32,6 +32,8 @@ app.configure('development', function () {
 app.get('/clientGraph', routes.clientGraph);
 app.get('/clientDashboard', routes.clientDashboard);
 app.get('/clientCenterGraph', routes.clientCenterGraph);
+app.get('/bvio', routes.bvio);
+app.get('/foosball', routes.foosball);
 app.get('/', routes.index);
 
 http.createServer(app).listen(app.get('port'), function(){

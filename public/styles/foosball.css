@@ -1,0 +1,45 @@
+.btn-group.btn-group-justified {
+  display: table;
+  width: 100%;
+}
+
+.btn-group .btn.btn-default {
+  display: table-cell;
+}
+
+.player-ranking-head {
+  margin-left: 25px;
+}
+
+.player-ranking-head div {
+  float: left;
+}
+
+.ranking ul, .game ul {
+  list-style-type: none;
+}
+
+.ranking .player-ranking {
+  width: 100%;
+}
+
+.ranking ul li div,
+.game ul li div {
+  display: inline-block;
+}
+
+.ranking .player-name {
+  width: 40%;
+}
+
+.ranking .player-win,
+.ranking .player-tie,
+.ranking .player-loss {
+  width: 20%;
+}
+
+.game .player-name,
+.game .player-score,
+.game .player-control {
+  width: 10%;
+}

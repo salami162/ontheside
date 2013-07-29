@@ -1,0 +1,46 @@
+extends layout
+
+block navbar
+  div.brand
+    strong b
+    strong v
+    strong &#46;
+    strong i
+    strong o
+  div.nav-collapse
+    ul.nav
+      li
+        span.find-client-label Find Client:
+        input#find-client.input-small.typeahead(name='targetClient', type='text', placeholder='client...', data-provide='typeahead')
+      li
+        span.time-frame-label Time Frame:
+        select#time-frame(name='timeFrame')
+          option(value="LAST_30_DAYS") Last 30 days
+          option(value="LAST_7_DAYS") Last 7 days
+          option(value="LAST_DAY") Last day
+      li
+        span.weight-limit-label Min Weight:
+        input#weight-limit.input-small(name='minWeight', type='text', placeholder='default: 50000')
+      li
+        button#update-chart.btn(type='button') Go!
+
+
+block content
+  div.client-graph
+    ul#chart-tabs.nav.nav-tabs
+      li
+        a.network(href='#network', data-toggle='tab') Network
+    div.tab-content
+      div#network.tab-pane
+        svg.chart
+
+    div.client-dashboard
+      div#dashboard.client-dashboard.modal.hide.fade(role='dialog', aria-hidden='true')
+        div.modal-header
+          h3#modal-title
+        div.modal-body
+        div.modal-footer
+          button#close-dashboard.btn(type='button') Close
+
+block customScripts
+  script(src='/scripts/require.js', data-main='/scripts/bvio.js')

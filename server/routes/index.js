@@ -1,11 +1,19 @@
 var _ = require('underscore');
 var BVIO = require('../lib/bvio');
+var Foosball = require('../lib/foosball');
 
 exports.index = function (req, res) {
   var data = {
-    title : 'BV Network Audience'
+    title : 'On the Side'
   };
   res.render('index', data);
+}
+
+exports.bvio = function (req, res) {
+  var data = {
+    title : 'BV Network Audience'
+  };
+  res.render('bvio', data);
 };
 
 exports.clientGraph = function (req, res) {
@@ -68,4 +76,13 @@ exports.clientCenterGraph = function (req, res) {
           error : 'Request server data failed!'
         });
       });
+};
+
+exports.foosball = function (req, res) {
+  var data = {
+    title : 'We Love Foosball!'
+  };
+  Foosball().initialize().done(function (foosball) {
+    res.render( 'foosball', _(data).extend(foosball) );
+  });
 };

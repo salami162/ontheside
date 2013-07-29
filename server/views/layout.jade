@@ -4,36 +4,17 @@ html
     title= title
     link(rel='stylesheet', href='/styles/bootstrap.css')
     link(rel='stylesheet', href='/styles/style.css')
+    block customStyles
   body
     div.navbar.navbar-fixed-top
       div.navbar-inner
         div.container
-          div.brand
-            strong b
-            strong v
-            strong &#46;
-            strong i
-            strong o
-          div.nav-collapse
-            ul.nav
-              li
-                span.find-client-label Find Client:
-                input#find-client.input-small.typeahead(name='targetClient', type='text', placeholder='client...', data-provide='typeahead')
-              li
-                span.time-frame-label Time Frame:
-                select#time-frame(name='timeFrame')
-                  option(value="LAST_30_DAYS") Last 30 days
-                  option(value="LAST_7_DAYS") Last 7 days
-                  option(value="LAST_DAY") Last day
-              li
-                span.weight-limit-label Min Weight:
-                input#weight-limit.input-small(name='minWeight', type='text', placeholder='default: 50000')
-              li
-                button#update-chart.btn(type='button') Go!
+          block navbar
+
     div.container
 
       block content
 
       ul.errors.unstyled
 
-    script(src='/scripts/require.js', data-main='/scripts/main.js')
+    block customScripts

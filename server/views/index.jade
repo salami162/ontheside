@@ -1,18 +1,4 @@
 extends layout
 
 block content
-  div.client-graph
-    ul#chart-tabs.nav.nav-tabs
-      li
-        a.network(href='#network', data-toggle='tab') Network
-    div.tab-content
-      div#network.tab-pane
-        svg.chart
-
-    div.client-dashboard
-      div#dashboard.client-dashboard.modal.hide.fade(role='dialog', aria-hidden='true')
-        div.modal-header
-          h3#modal-title
-        div.modal-body
-        div.modal-footer
-          button#close-dashboard.btn(type='button') Close
+  div.welcome
