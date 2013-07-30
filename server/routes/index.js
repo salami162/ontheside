@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var BVIO = require('../lib/bvio');
-var Foosball = require('../lib/foosball');
+var Foosball = require('../lib/foosball')();
 
 exports.index = function (req, res) {
   var data = {
@@ -82,7 +82,23 @@ exports.foosball = function (req, res) {
   var data = {
     title : 'We Love Foosball!'
   };
-  Foosball().initialize().done(function (foosball) {
+  Foosball.initialize().done(function (foosball) {
     res.render( 'foosball', _(data).extend(foosball) );
   });
+};
+
+exports.saveScore = function (req, res) {
+  try {
+    Foosball.saveScore(req.body);
+    if (Foosball.serveLocal) {
+      res.send(200);
+    }
+    else {
+      console.log('redirect');
+      res.redirect('/foosball');
+    }
+  }
+  catch (e) {
+    res.send(500, { error: e });
+  }
 };

@@ -13,12 +13,28 @@ define([
     },
 
     saveScore : function (score) {
+      var self = this;
       var scores = this.get('scores');
       if (!scores) {
         scores = [];
       }
       scores.push(score);
-      this.set('scores', scores);
+
+      this._save(score)
+        .done(function () {
+          self.set('scores', scores);
+        })
+        .fail(function (err) {
+          alert('Server error : ', err);
+        });
+    },
+
+    _save : function (score) {
+      return $.ajax({
+        url : '/foosball/games',
+        type : 'POST',
+        data : score
+      });
     },
 
     updateRankings : function (gamePlayers) {

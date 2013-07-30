@@ -9,12 +9,55 @@ var
 _.mixin( require('underscore.deferred') );
 
 var gamesView = {
-  games : {
+  listGames : {
     map : function (doc) {
-      if (doc && doc.data && doc.type === 'game') {
-        emit(doc.date, doc.player1);
-        // emit(doc.date, doc.player2);
+      if (doc && doc.type === 'game') {
+       emit(doc._id, {
+        player1 : doc.player1,
+        score1 : doc.score1,
+        player2 : doc.player2,
+        score2 : doc.score2
+       });
       }
+    }
+  },
+  listWins : {
+    map : function (doc) {
+      if (doc && doc.type === 'game') {
+        var winner;
+        if (doc.score1 > doc.score2) winner = doc.player1;
+        else if (doc.score1 < doc.score2) winner = doc.player2;
+        emit(winner, 1);
+      }
+    },
+    reduce : function (keys, values) {
+      return sum(values);
+    }
+  },
+  listTies : {
+    map : function (doc) {
+      if (doc && doc.type === 'game') {
+        if (doc.score1 == doc.score2) {
+          emit(doc.player1, 1);
+          emit(doc.player2, 1);
+        }
+      }
+    },
+    reduce : function (keys, values) {
+      return sum(values);
+    }
+  },
+  listLosses : {
+    map : function (doc) {
+      if (doc && doc.type === 'game') {
+        var loser;
+        if (doc.score1 < doc.score2) loser = doc.player1;
+        else if (doc.score1 > doc.score2) loser = doc.player2;
+        emit(loser, 1);
+      }
+    },
+    reduce : function (keys, values) {
+      return sum(values);
     }
   }
 };
@@ -27,10 +70,8 @@ db.getDoc('_design/games', function (err, doc) {
 });
 
 function Foosball () {
-  this.serveLocal = true; // set to true to read json file locally.
-  this.scores = {};
-  this.players = {};
-  this.rankings = [];
+  this.serveLocal = false; //true; // set to true to read json file locally.
+  this._reset();
 }
 
 Foosball.prototype.toJSON = function () {
@@ -51,8 +92,15 @@ Foosball.prototype.initialize = function () {
   return dfd.promise();
 }
 
+Foosball.prototype._reset = function () {
+  this.scores = {};
+  this.players = {};
+  this.rankings = [];
+}
+
 Foosball.prototype._initFromFile = function (dfd) {
   var self = this;
+  this._reset();
   fs.readFile(__dirname + '/../data/foosball.json', 'utf8', function (err, data) {
     if (err) {
       dfd.reject({ error : err });
@@ -62,18 +110,22 @@ Foosball.prototype._initFromFile = function (dfd) {
     self.scores = jsonData.scores;
     self._processScores();
     self._updateRankings();
-    dfd.resolve( self.toJSON() );
+    dfd && dfd.resolve( self.toJSON() );
   });
 }
 
 Foosball.prototype._initFromCouch = function (dfd) {
-  db.getDoc('_design/games/_view/games', function (err, doc) {
-    console.log(err, doc);
+  var self = this;
+  this._reset();
+  db.view('games', 'listGames', function (err, docs) {
     if (err) {
       dfd.reject({ error : err });
       return;
     }
-    dfd.resolve(data);
+    self.scores = _(docs.rows).pluck('value');
+    self._processScores();
+    self._updateRankings();
+    dfd && dfd.resolve( self.toJSON() );
   });
 }
 
@@ -113,6 +165,17 @@ Foosball.prototype._updateRankings = function () {
       return 0 - r.win;
     });
   console.log(this.rankings);
+}
+
+Foosball.prototype.saveScore = function (newScore) {
+  if (!this.serveLocal) {
+    this._saveToCouch(newScore);
+  }
+}
+
+Foosball.prototype._saveToCouch = function(newScore) {
+  var newDoc = _.extend({}, newScore, { type : 'game' });
+  db.saveDoc(newDoc);
 }
 
 module.exports = function () {
