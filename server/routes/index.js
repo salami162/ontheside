@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var BVIO = require('../lib/bvio');
 var Foosball = require('../lib/foosball')();
+var Funnel = require('../lib/funnel')();
 
 exports.index = function (req, res) {
   var data = {
@@ -101,4 +102,12 @@ exports.saveScore = function (req, res) {
   catch (e) {
     res.send(500, { error: e });
   }
+};
+
+exports.funnel = function (req, res) {
+  var data = {
+    title : 'Funnel Steps'
+  };
+  _(data).extend( Funnel.toJSON() );
+  res.render( 'funnel', data );
 };
