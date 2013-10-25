@@ -2,10 +2,10 @@ define([
   'vendor/bootstrap',
   'vendor/underscore',
   'vendor/d3.v3',
-  'forceGraph',
-  'treeGraph',
+  'bvio/forceGraph',
+  'bvio/treeGraph',
   'loadingOverlay',
-  'global'
+  'bvio/global'
 ], function ($, _, d3, ForceGraph, TreeGraph, Loading, Global) {
 
   var dashboardModel = Global.Model.extend({

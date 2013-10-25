@@ -1,7 +1,7 @@
 define([
   'vendor/underscore',
   'vendor/d3.v3',
-  'global'
+  'bvio/global'
 ], function (_, d3, Global) {
 
   function forceGraph (selector, width, height, view) {

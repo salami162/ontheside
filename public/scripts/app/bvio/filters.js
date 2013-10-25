@@ -2,7 +2,7 @@ define([
   'vendor/bootstrap',
   'vendor/underscore',
   'loadingOverlay',
-  'global'
+  'bvio/global'
 ], function ($, _, Loading, Global) {
   var filtersModel = Global.Model.extend({
     name : 'filters',

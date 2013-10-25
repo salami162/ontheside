@@ -25,7 +25,7 @@ define([
     Funnel.prototype.drawGraph = function () {
         var self = this,
             $chartSvg = $('.chart svg'),
-            chartHeight = $chartSvg.height() - 80; console.log('chartHeight = ', chartHeight);
+            chartHeight = $chartSvg.height() - 80;
 
         nv.addGraph(function() {
         
@@ -44,7 +44,7 @@ define([
                   .append('text')
                   .attr('class', function (d) {
                     var $rect = $(this.previousSibling);
-                    $(this).attr('data-mirror', $rect.attr('height') < chartHeight / 2)
+                    $(this).attr('data-mirror', $rect.attr('height') < chartHeight / 2);
                     return 'nv-text-box';
                   });
 
@@ -76,12 +76,12 @@ define([
 
             };
 
-            chart.update = function() { 
-                dispatch.beforeUpdate(); 
+            chart.update = function () {
+                dispatch.beforeUpdate();
                 container.transition().duration(transitionDuration).call(function() {
                   chart();
                   _.delay(_updateLabels, 550);
-                }); 
+                });
             };
 
             d3.select('.chart svg')

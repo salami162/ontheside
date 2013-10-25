@@ -1,9 +1,9 @@
 define([
   'vendor/bootstrap',
   'vendor/underscore',
-  'forceGraph',
+  'bvio/forceGraph',
   'loadingOverlay',
-  'global'
+  'bvio/global'
 ], function ($, _, ForceGraph, Loading, Global) {
   var clientGraphModel = Global.Model.extend({
     name : 'clientGraph',

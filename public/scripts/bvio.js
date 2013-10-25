@@ -13,10 +13,10 @@ define('window', function () {
 
 
 require([
-  'global',
-  'filters',
-  'clientGraph',
-  'clientDashboard',
+  'bvio/global',
+  'bvio/filters',
+  'bvio/clientGraph',
+  'bvio/clientDashboard',
   'vendor/d3.v3',
   'vendor/underscore'
 ], function (

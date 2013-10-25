@@ -36,6 +36,7 @@ app.get('/bvio', routes.bvio);
 app.get('/foosball', routes.foosball);
 app.post('/foosball/games', routes.saveScore);
 app.get('/funnel', routes.funnel);
+app.get('/driverRatings', routes.driverRatings);
 app.get('/', routes.index);
 
 http.createServer(app).listen(app.get('port'), function(){

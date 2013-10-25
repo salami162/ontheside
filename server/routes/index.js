@@ -2,13 +2,14 @@ var _ = require('underscore');
 var BVIO = require('../lib/bvio');
 var Foosball = require('../lib/foosball')();
 var Funnel = require('../lib/funnel')();
+var DriverRatings = require('../lib/driverRatings')();
 
 exports.index = function (req, res) {
   var data = {
     title : 'On the Side'
   };
   res.render('index', data);
-}
+};
 
 exports.bvio = function (req, res) {
   var data = {
@@ -110,4 +111,19 @@ exports.funnel = function (req, res) {
   };
   _(data).extend( Funnel.toJSON() );
   res.render( 'funnel', data );
+};
+
+exports.driverRatings = function (req, res) {
+  var data = {
+    title : 'Driver Ratings'
+  };
+  DriverRatings.getData({
+    exists : false,
+    min : 5
+  }).done(function (ratings) {
+    _(data).extend({
+      drivers : ratings
+    });
+    res.render('driverratings', data);
+  });
 };

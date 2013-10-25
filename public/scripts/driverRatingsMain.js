@@ -13,16 +13,18 @@ define('window', function () {
 
 
 require([
-  'funnel',
+  'driverRatings',
   'vendor/underscore',
   'vendor/bootstrap'
 ], function (
-  Funnel,
+  DriverRatings,
   _,
   $
 ) {
-  var f = new Funnel();
+  console.log(drivers);
 
-  f.translate(steps);
-  f.drawGraph();
+  var dr = new DriverRatings(drivers);
+
+  dr.drawGraph();
+
 });

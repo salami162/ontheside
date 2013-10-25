@@ -1,0 +1,14 @@
+extends layout
+
+block customStyles
+  link(rel="stylesheet", href="/styles/nv.d3.css")
+  link(rel="stylesheet", href="/styles/driverRatings.css")
+
+block content
+  div.chart
+
+block customScripts
+  script(src="/scripts/require.js", data-main="/scripts/driverRatingsMain.js")
+
+  script
+    var drivers = !{JSON.stringify(drivers)}
