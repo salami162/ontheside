@@ -70,7 +70,7 @@ db.getDoc('_design/games', function (err, doc) {
 });
 
 function Foosball () {
-  this.serveLocal = false; //true; // set to true to read json file locally.
+  this.serveLocal = true; // set to true to read json file locally.
   this._reset();
 }
 

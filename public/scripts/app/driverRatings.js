@@ -22,7 +22,7 @@ define([
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-        var formatPercent = d3.format(".00");
+        var formatPercent = d3.format(".00%");
 
         var x = d3.scale.ordinal()
             .rangeRoundBands([0, width], 0.1, 1);
@@ -50,12 +50,12 @@ define([
         _(this.data).each(function (data) {
             graphData.push({
                 id : data.id,
-                ratings : data.ratingStats.nonFiveStarsRatingAvg
+                ratings : data.wilsonScore
             });
         });
 
           x.domain(graphData.map(function(d) { return d.id; }));
-          y.domain([0, 5]);
+          y.domain([0, d3.max(graphData, function(d) { return d.ratings; })]);
 
           svg.append("g")
               .attr("class", "x axis")
@@ -70,7 +70,7 @@ define([
               .attr("y", 6)
               .attr("dy", ".71em")
               .style("text-anchor", "end")
-              .text("Rating");
+              .text("Frequency");
 
           svg.selectAll(".bar")
               .data(graphData)
@@ -91,7 +91,7 @@ define([
             clearTimeout(sortTimeout);
 
             // Copy-on-write since tweens are evaluated after a delay.
-            var x0 = x.domain(graphData.sort(this.checked
+            var x0 = x.domain(data.sort(this.checked
                 ? function(a, b) { return b.ratings - a.ratings; }
                 : function(a, b) { return d3.ascending(a.id, b.id); })
                 .map(function(d) { return d.id; }))

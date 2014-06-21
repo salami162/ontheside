@@ -118,12 +118,16 @@ exports.driverRatings = function (req, res) {
     title : 'Driver Ratings'
   };
   DriverRatings.getData({
-    exists : false,
-    min : 5
+    wilsonScore : 1.0
   }).done(function (ratings) {
     _(data).extend({
       drivers : ratings
     });
     res.render('driverratings', data);
   });
+};
+
+exports.simulation = function (req, res) {
+  DriverRatings.simulate();
+  res.send(200);
 };

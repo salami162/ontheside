@@ -46,6 +46,29 @@ Driver.prototype.addRating = function (rating) {
   return this;
 };
 
+Driver.prototype.calculateWilsonScore = function () {
+  var n = this.ratingStats.nonFiveStarsCount + this.ratingStats.fiveStarsCount;
+  if (n === 0) {
+    this.lowerWilsonScore = 0;
+    this.upperWilsonScore = 0;
+    return;
+  }
+
+  console.log("driver :", this.id , n, this.ratingStats.fiveStarsCount/n, this.ratingStats.totalRatingAvg);
+
+  var z = 1.96, // 95%
+      phat = 1.0 * (this.ratingStats.fiveStarsCount) / (n);
+
+  var delta = z * Math.sqrt( (phat*(1-phat) + z*z/(4*n)) / n );
+
+  this.lowerWilsonScore = (phat + z*z/(2*n) - delta) / (1 + z*z/n);
+  this.upperWilsonScore = (phat + z*z/(2*n) + delta) / (1 + z*z/n);
+  // this.lowerWilsonScore = (phat + z*z/(2*n) - z * Math.sqrt((phat*(1-phat)+z*z/(4*n))/n))/(1+z*z/n);
+
+  console.log('driver :', this.id, this.lowerWilsonScore, this.upperWilsonScore);
+  console.log("");
+};
+
 function DriverRating (csvData) {
   if (_(csvData).isEmpty()) {
     return null;
@@ -97,26 +120,24 @@ DriverRatings.prototype.getData = function (filters) {
       }
     }
 
-    if (filters) {
-      drivers = _(drivers).filter(function (driver) {
-        var shallReturn = true;
-        if (filters.exists) {
-          shallReturn = shallReturn && driver.ratingStats.nonFiveStarsCount > 0;
-        }
-        if (filters.min) {
-          shallReturn = shallReturn && (driver.ratingStats.nonFiveStarsRatingAvg <= filters.min);
-        }
-        if (shallReturn) {
-          return driver;
-        }
-      });
-    }
+    _(drivers).each(function (driver) {
+      driver.calculateWilsonScore();
+    });
+
+    drivers = _(drivers).sortBy(function (driver) {
+      return driver.ratingStats.fiveStarsCount + driver.ratingStats.nonFiveStarsCount;
+    });
+
+
 
     requestDfd.resolve( drivers );
   });
   return requestDfd;
 };
 
+DriverRatings.prototype.simulate = function () {
+  console.log("run simulation");
+};
 
 
 module.exports = function () {
